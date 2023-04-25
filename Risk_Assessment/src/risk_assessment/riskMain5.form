@@ -187,33 +187,86 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                  <Component id="jLabel2" min="-2" pref="272" max="-2" attributes="0"/>
-                  <EmptySpace pref="1630" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <Component id="LogoLabel" min="-2" pref="272" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="141" max="-2" attributes="0"/>
+                          <Component id="BackgroundMain" min="-2" pref="1430" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="347" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="jLabel2" min="-2" pref="67" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="LogoLabel" min="-2" pref="67" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="BackgroundMain" min="-2" pref="519" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JLabel" name="LogoLabel">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/risk_assessment/assets/MainLogo.png"/>
             </Property>
           </Properties>
         </Component>
+        <Container class="javax.swing.JScrollPane" name="BackgroundMain">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTable" name="jTable1">
+              <Properties>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                  <Table columnCount="3" rowCount="0">
+                    <Column editable="true" title="Tick" type="java.lang.Boolean"/>
+                    <Column editable="true" title="Assets" type="java.lang.String"/>
+                    <Column editable="true" title="Description" type="java.lang.Object"/>
+                  </Table>
+                </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="30" minWidth="30" prefWidth="30" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title value="Likelihood"/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
+                </Property>
+                <Property name="rowHeight" type="int" value="60"/>
+                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="NavigationBarPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -228,17 +281,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="One" pref="206" max="32767" attributes="0"/>
-              <Component id="Two" max="32767" attributes="0"/>
+              <Component id="DashboardPanel" pref="206" max="32767" attributes="0"/>
+              <Component id="ManagementPanel" max="32767" attributes="0"/>
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="Four" alignment="0" max="32767" attributes="0"/>
+                      <Component id="ThreatPanel" alignment="0" max="32767" attributes="0"/>
                       <Component id="AssetPanel" alignment="0" max="32767" attributes="0"/>
-                      <Component id="Two1" alignment="1" max="32767" attributes="0"/>
-                      <Component id="Three3" alignment="0" max="32767" attributes="0"/>
-                      <Component id="Three5" alignment="0" max="32767" attributes="0"/>
-                      <Component id="Three6" alignment="0" max="32767" attributes="0"/>
-                      <Component id="Four1" alignment="1" max="32767" attributes="0"/>
+                      <Component id="FeaturesPanel" alignment="1" max="32767" attributes="0"/>
+                      <Component id="RiskCalcPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="AuditPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="HelpPanel" alignment="0" max="32767" attributes="0"/>
+                      <Component id="RiskScorePanel" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -247,30 +300,30 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="One" min="-2" pref="100" max="-2" attributes="0"/>
+                  <Component id="DashboardPanel" min="-2" pref="100" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="Two" min="-2" pref="27" max="-2" attributes="0"/>
+                  <Component id="ManagementPanel" min="-2" pref="27" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="AssetPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="Four" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="ThreatPanel" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="Four1" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="RiskScorePanel" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="Two1" min="-2" pref="27" max="-2" attributes="0"/>
+                  <Component id="FeaturesPanel" min="-2" pref="27" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="Three3" min="-2" max="-2" attributes="0"/>
+                  <Component id="RiskCalcPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="Three5" min="-2" max="-2" attributes="0"/>
+                  <Component id="AuditPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="Three6" min="-2" max="-2" attributes="0"/>
+                  <Component id="HelpPanel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="416" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="One">
+        <Container class="javax.swing.JPanel" name="DashboardPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -288,8 +341,9 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="OneMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="OneMouseExited"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="DashboardPanelMouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="DashboardPanelMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="DashboardPanelMouseExited"/>
           </Events>
 
           <Layout>
@@ -297,12 +351,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="Home_Icon" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="65" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel1" min="-2" pref="132" max="-2" attributes="0"/>
+                      <Component id="DashboardJLabel" min="-2" pref="132" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -311,16 +365,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="jLabel3" min="-2" pref="66" max="-2" attributes="0"/>
+                      <Component id="Home_Icon" min="-2" pref="66" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="DashboardJLabel" min="-2" pref="34" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel3">
+            <Component class="javax.swing.JLabel" name="Home_Icon">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -333,7 +387,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="DashboardJLabel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="0" red="0" type="rgb"/>
@@ -346,7 +400,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Two">
+        <Container class="javax.swing.JPanel" name="ManagementPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -356,8 +410,8 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TwoMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="TwoMouseExited"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ManagementPanelMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ManagementPanelMouseExited"/>
           </Events>
 
           <Layout>
@@ -365,7 +419,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <Component id="ManagementJLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -374,14 +428,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <Component id="ManagementJLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel4">
+            <Component class="javax.swing.JLabel" name="ManagementJLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="14" style="1"/>
@@ -441,7 +495,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Four">
+        <Container class="javax.swing.JPanel" name="ThreatPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -456,7 +510,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="FourMouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ThreatPanelMouseClicked"/>
           </Events>
 
           <Layout>
@@ -464,7 +518,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <Component id="ThreatLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="83" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -473,24 +527,24 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <Component id="ThreatLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel6">
+            <Component class="javax.swing.JLabel" name="ThreatLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Threat"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel6MouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ThreatLabelMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Two1">
+        <Container class="javax.swing.JPanel" name="FeaturesPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -500,8 +554,8 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Two1MouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Two1MouseExited"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="FeaturesPanelMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="FeaturesPanelMouseExited"/>
           </Events>
 
           <Layout>
@@ -509,7 +563,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                      <Component id="FeaturesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -518,14 +572,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
+                      <Component id="FeaturesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel16">
+            <Component class="javax.swing.JLabel" name="FeaturesLabel">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Arial" size="14" style="1"/>
@@ -535,7 +589,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Three3">
+        <Container class="javax.swing.JPanel" name="RiskCalcPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -547,7 +601,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Three3MouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="RiskCalcPanelMouseClicked"/>
           </Events>
 
           <Layout>
@@ -555,7 +609,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
-                      <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
+                      <Component id="RiskCalcText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -564,21 +618,21 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
+                      <Component id="RiskCalcText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel18">
+            <Component class="javax.swing.JLabel" name="RiskCalcText">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Risk Calculator"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Three5">
+        <Container class="javax.swing.JPanel" name="AuditPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -589,13 +643,16 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="AuditPanelMouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
-                      <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
+                      <Component id="AuditText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -604,21 +661,21 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
+                      <Component id="AuditText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel20">
+            <Component class="javax.swing.JLabel" name="AuditText">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Audit"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Three6">
+        <Container class="javax.swing.JPanel" name="HelpPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -629,13 +686,16 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="HelpPanelMouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
-                      <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                      <Component id="HelpText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -644,21 +704,21 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
+                      <Component id="HelpText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="22" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel21">
+            <Component class="javax.swing.JLabel" name="HelpText">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Help"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="Four1">
+        <Container class="javax.swing.JPanel" name="RiskScorePanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -673,7 +733,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Four1MouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="RiskScorePanelMouseClicked"/>
           </Events>
 
           <Layout>
@@ -681,7 +741,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
-                      <Component id="jLabel31" min="-2" max="-2" attributes="0"/>
+                      <Component id="RiskScoreText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -690,26 +750,29 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                      <Component id="jLabel31" min="-2" max="-2" attributes="0"/>
+                      <Component id="RiskScoreText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel31">
+            <Component class="javax.swing.JLabel" name="RiskScoreText">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Risk Score"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel31MouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="RiskScoreTextMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+    <Container class="javax.swing.JTabbedPane" name="Tab_tabbedPane">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="200" y="30" width="1720" height="1050"/>
@@ -733,8 +796,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel97" min="-2" pref="194" max="-2" attributes="0"/>
-                          <Component id="jPanel42" min="-2" pref="1407" max="-2" attributes="0"/>
+                          <Component id="AssetTableBackgroundPanel" min="-2" pref="1407" max="-2" attributes="0"/>
+                          <Component id="AssetManagmentText" min="-2" pref="194" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="290" max="32767" attributes="0"/>
                   </Group>
@@ -744,16 +807,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                      <Component id="jLabel97" min="-2" pref="55" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                      <Component id="jPanel42" min="-2" pref="568" max="-2" attributes="0"/>
-                      <EmptySpace pref="358" max="32767" attributes="0"/>
+                      <Component id="AssetManagmentText" min="-2" pref="55" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="AssetTableBackgroundPanel" min="-2" pref="568" max="-2" attributes="0"/>
+                      <EmptySpace pref="361" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel97">
+            <Component class="javax.swing.JLabel" name="AssetManagmentText">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="0"/>
@@ -761,7 +824,7 @@
                 <Property name="text" type="java.lang.String" value="Asset Management:"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel42">
+            <Container class="javax.swing.JPanel" name="AssetTableBackgroundPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -773,59 +836,51 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel32" min="-2" pref="116" max="-2" attributes="0"/>
+                          <Component id="Asset_Showing" min="-2" pref="116" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jButton5" min="-2" pref="124" max="-2" attributes="0"/>
+                          <Component id="AssetDeleteBtn" min="-2" pref="124" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                          <Component id="AssetUpdateBtn" min="-2" pref="113" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane5" min="-2" pref="223" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButton4" min="-2" pref="48" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="createNewAsset" min="-2" pref="124" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jScrollPane1" min="-2" pref="1430" max="-2" attributes="0"/>
+                          <Component id="jScrollPane3" min="-2" pref="1430" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane5" min="-2" pref="37" max="-2" attributes="0"/>
-                                      <Component id="jButton4" min="-2" pref="37" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel32" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
-                                      <Component id="jButton5" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="Asset_Showing" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="createNewAsset" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="AssetUpdateBtn" max="32767" attributes="0"/>
+                              <Component id="AssetDeleteBtn" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" min="-2" pref="519" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                          <Component id="jScrollPane3" min="-2" pref="519" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                <Container class="javax.swing.JScrollPane" name="jScrollPane3">
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                   </AuxValues>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="jTable1">
+                    <Component class="javax.swing.JTable" name="assetTable">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="3" rowCount="0">
@@ -847,7 +902,7 @@
                               <Renderer/>
                             </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                              <Title value="Likelihood"/>
+                              <Title/>
                               <Editor/>
                               <Renderer/>
                             </Column>
@@ -861,51 +916,36 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane5">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTextPane" name="jTextPane1">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                            <LineBorder>
-                              <Color PropertyName="color" blue="cc" green="cc" red="cc" type="rgb"/>
-                            </LineBorder>
-                          </Border>
-                        </Property>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="0"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JLabel" name="jLabel7">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Search:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="jButton4">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Go"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel32">
+                <Component class="javax.swing.JLabel" name="Asset_Showing">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Showing: 42 Assets"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton5">
+                <Component class="javax.swing.JButton" name="createNewAsset">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Create_New"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton5MouseClicked"/>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="createNewAssetMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createNewAssetActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="AssetUpdateBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Update"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="AssetUpdateBtnMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AssetUpdateBtnActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="AssetDeleteBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Delete Selected"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="AssetDeleteBtnMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AssetDeleteBtnActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -927,8 +967,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel51" min="-2" pref="1407" max="-2" attributes="0"/>
-                          <Component id="jLabel102" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="RiskScoreTableBackgroundPanel" min="-2" pref="1407" max="-2" attributes="0"/>
+                          <Component id="RiskScoreManagementText" min="-2" pref="229" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="291" max="32767" attributes="0"/>
                   </Group>
@@ -938,16 +978,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="jLabel102" min="-2" pref="55" max="-2" attributes="0"/>
+                      <Component id="RiskScoreManagementText" min="-2" pref="55" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jPanel51" min="-2" pref="568" max="-2" attributes="0"/>
+                      <Component id="RiskScoreTableBackgroundPanel" min="-2" pref="568" max="-2" attributes="0"/>
                       <EmptySpace pref="360" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel102">
+            <Component class="javax.swing.JLabel" name="RiskScoreManagementText">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="0"/>
@@ -955,7 +995,7 @@
                 <Property name="text" type="java.lang.String" value="Risk Score Management:"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel51">
+            <Container class="javax.swing.JPanel" name="RiskScoreTableBackgroundPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -964,11 +1004,13 @@
 
               <Layout>
                 <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel48" min="-2" pref="116" max="-2" attributes="0"/>
+                          <Component id="Showing_RiskScore" min="-2" pref="182" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
+                          <Component id="RiskScoreDeleteBtn" min="-2" pref="114" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="Filter_Severity" min="-2" pref="124" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       </Group>
@@ -983,9 +1025,12 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel48" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
-                              <Component id="Filter_Severity" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="RiskScoreDeleteBtn" min="-2" pref="37" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="Showing_RiskScore" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                  <Component id="Filter_Severity" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="jScrollPane4" min="-2" pref="519" max="-2" attributes="0"/>
@@ -1007,7 +1052,7 @@
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="5" rowCount="0">
                             <Column editable="true" title="AssetName/s" type="java.lang.String"/>
-                            <Column editable="true" title="Risk Vulnerability" type="java.lang.Object"/>
+                            <Column editable="true" title="Threat" type="java.lang.Object"/>
                             <Column editable="true" title="Risk Likelihood" type="java.lang.String"/>
                             <Column editable="true" title="Risk_Impact" type="java.lang.String"/>
                             <Column editable="true" title="Risk Score" type="java.lang.String"/>
@@ -1050,7 +1095,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="javax.swing.JLabel" name="jLabel48">
+                <Component class="javax.swing.JLabel" name="Showing_RiskScore">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Showing: 23"/>
                   </Properties>
@@ -1062,6 +1107,14 @@
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Filter_SeverityMouseClicked"/>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Filter_SeverityActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="RiskScoreDeleteBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Delete Selected"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="RiskScoreDeleteBtnMouseClicked"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1084,24 +1137,24 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
+                              <Component id="SummaryPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
+                                      <Component id="SelectAssetPanel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                                      <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                                      <Component id="SelectThreatPanel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                      <Component id="jPanel18" min="-2" max="-2" attributes="0"/>
+                                      <Component id="TopRiskAssessmentPanel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
+                                      <Component id="SaveTextPanel" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jTabbedPane2" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="0" pref="1110" max="32767" attributes="0"/>
-                              <Component id="jButton2" min="-2" pref="147" max="-2" attributes="0"/>
+                              <Component id="BackBtn" min="-2" pref="147" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                               <Component id="Next" min="-2" pref="135" max="-2" attributes="0"/>
                           </Group>
@@ -1114,19 +1167,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jPanel18" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanel17" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanel9" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanel10" max="32767" attributes="0"/>
+                          <Component id="TopRiskAssessmentPanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="SelectThreatPanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="SelectAssetPanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="SaveTextPanel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
+                          <Component id="SummaryPanel" min="-2" max="-2" attributes="0"/>
                           <Component id="jTabbedPane2" alignment="0" min="-2" pref="640" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton2" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="BackBtn" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                           <Component id="Next" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
@@ -1135,7 +1188,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel9">
+            <Container class="javax.swing.JPanel" name="SelectAssetPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -1149,7 +1202,7 @@
                 <Property name="useNullLayout" type="boolean" value="false"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel28">
+                <Component class="javax.swing.JLabel" name="SelectAssetText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Select Asset"/>
                   </Properties>
@@ -1161,7 +1214,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel12">
+            <Container class="javax.swing.JPanel" name="SummaryPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -1171,29 +1224,29 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
+                      <Component id="TopSummaryPanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                                      <Component id="AssetTextOut" min="-2" pref="236" max="-2" attributes="0"/>
+                                      <Component id="SummarySelectedAssetText" min="-2" pref="236" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel30" min="-2" pref="44" max="-2" attributes="0"/>
-                                          <Component id="jLabel36" min="-2" pref="70" max="-2" attributes="0"/>
-                                          <Component id="jLabel96" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
+                                          <Component id="SummaryAssetText" min="-2" pref="44" max="-2" attributes="0"/>
+                                          <Component id="SummaryThreatText" min="-2" pref="70" max="-2" attributes="0"/>
+                                          <Component id="SummaryRiskScoreText" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="ImpactTextOut" min="-2" pref="236" max="-2" attributes="0"/>
-                                      <Component id="LikelihoodTextOut" min="-2" pref="236" max="-2" attributes="0"/>
-                                      <Component id="jLabel37" min="-2" pref="236" max="-2" attributes="0"/>
+                                      <Component id="SummaryImpactTextOut" min="-2" pref="236" max="-2" attributes="0"/>
+                                      <Component id="SummaryLikelihoodText" min="-2" pref="236" max="-2" attributes="0"/>
+                                      <Component id="SummaryThreatSelectionText" min="-2" pref="236" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -1204,28 +1257,28 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jPanel11" min="-2" max="-2" attributes="0"/>
+                          <Component id="TopSummaryPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jLabel30" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="SummaryAssetText" min="-2" pref="33" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="AssetTextOut" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="SummarySelectedAssetText" min="-2" pref="35" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jLabel36" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="SummaryThreatText" min="-2" pref="33" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel37" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="SummaryThreatSelectionText" min="-2" pref="35" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jLabel96" min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="SummaryRiskScoreText" min="-2" pref="33" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="LikelihoodTextOut" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="SummaryLikelihoodText" min="-2" pref="35" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="ImpactTextOut" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="SummaryImpactTextOut" min="-2" pref="35" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="253" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel11">
+                <Container class="javax.swing.JPanel" name="TopSummaryPanel">
                   <Properties>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -1237,7 +1290,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace pref="121" max="32767" attributes="0"/>
-                              <Component id="jLabel29" min="-2" pref="89" max="-2" attributes="0"/>
+                              <Component id="SummaryText" min="-2" pref="89" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -1246,14 +1299,14 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                              <Component id="jLabel29" min="-2" pref="37" max="-2" attributes="0"/>
+                              <Component id="SummaryText" min="-2" pref="37" max="-2" attributes="0"/>
                               <EmptySpace pref="19" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel29">
+                    <Component class="javax.swing.JLabel" name="SummaryText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Malgun Gothic" size="12" style="1"/>
@@ -1266,37 +1319,37 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="javax.swing.JLabel" name="jLabel30">
+                <Component class="javax.swing.JLabel" name="SummaryAssetText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Asset:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="AssetTextOut">
+                <Component class="javax.swing.JLabel" name="SummarySelectedAssetText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel36">
+                <Component class="javax.swing.JLabel" name="SummaryThreatText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Threat:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel37">
+                <Component class="javax.swing.JLabel" name="SummaryThreatSelectionText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel96">
+                <Component class="javax.swing.JLabel" name="SummaryRiskScoreText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Risk Score:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="LikelihoodTextOut">
+                <Component class="javax.swing.JLabel" name="SummaryLikelihoodText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="ImpactTextOut">
+                <Component class="javax.swing.JLabel" name="SummaryImpactTextOut">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
@@ -1307,7 +1360,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPanel13">
+                <Container class="javax.swing.JPanel" name="AssetSelectionPanel">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="tab1">
@@ -1319,10 +1372,10 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="list1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="AssetList" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel100" min="-2" max="-2" attributes="0"/>
+                              <Component id="SelectAssetsLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace pref="976" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1331,30 +1384,30 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel100" pref="31" max="32767" attributes="0"/>
+                              <Component id="SelectAssetsLabel" pref="31" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="list1" min="-2" pref="570" max="-2" attributes="0"/>
+                              <Component id="AssetList" min="-2" pref="570" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="java.awt.List" name="list1">
+                    <Component class="java.awt.List" name="AssetList">
                       <Properties>
                         <Property name="multipleMode" type="boolean" value="true"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="list1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AssetListActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel100">
+                    <Component class="javax.swing.JLabel" name="SelectAssetsLabel">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Select Assets: "/>
                       </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="jPanel20">
+                <Container class="javax.swing.JPanel" name="ThreatSelecitonPanel">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="tab2">
@@ -1368,11 +1421,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel35" min="-2" pref="173" max="-2" attributes="0"/>
+                              <Component id="SelectThreatLabel" min="-2" pref="173" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="list2" min="-2" pref="1302" max="-2" attributes="0"/>
+                              <Component id="ThreatList" min="-2" pref="1302" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1381,17 +1434,17 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                              <Component id="jLabel35" max="32767" attributes="0"/>
+                              <Component id="SelectThreatLabel" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="list2" min="-2" pref="570" max="-2" attributes="0"/>
+                              <Component id="ThreatList" min="-2" pref="570" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="java.awt.List" name="list2">
+                    <Component class="java.awt.List" name="ThreatList">
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel35">
+                    <Component class="javax.swing.JLabel" name="SelectThreatLabel">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Select Threats: "/>
                       </Properties>
@@ -1415,46 +1468,39 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel39" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
+                                          <Component id="VulnerabilityText" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
                                           <Component id="attackVectorBox" min="-2" pref="99" max="-2" attributes="0"/>
-                                          <Component id="jLabel44" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                                              <Component id="jLabel45" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                          <Component id="CIAText" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="102" attributes="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jLabel46" min="-2" max="-2" attributes="0"/>
-                                                          <Component id="jLabel40" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="ConfidentialityText" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="AttackVectorText" alignment="0" min="-2" max="-2" attributes="0"/>
                                                           <Component id="confidentialityBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                                       </Group>
                                                       <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jLabel41" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                          <Component id="jLabel47" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="AttackComplexityText" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="IntegrityText" alignment="0" min="-2" max="-2" attributes="0"/>
                                                           <Component id="attackComplexityBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                                           <Component id="integrityBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                                       </Group>
                                                       <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jLabel42" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                          <Component id="jLabel52" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="PrivilegesText" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          <Component id="AvailabilityText" alignment="0" min="-2" max="-2" attributes="0"/>
                                                           <Component id="privilegesRequiredBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                                           <Component id="availabilityBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                                       </Group>
                                                       <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Component id="tracabilityBox" min="-2" pref="99" max="-2" attributes="0"/>
-                                                          <Component id="jLabel43" min="-2" pref="55" max="-2" attributes="0"/>
-                                                          <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                                                              <Component id="scopeBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                                              <Component id="jLabel53" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                          </Group>
+                                                          <Component id="ScopeText" min="-2" pref="55" max="-2" attributes="0"/>
+                                                          <Component id="scopeBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                                          <Component id="TraceabilityText" alignment="0" min="-2" max="-2" attributes="0"/>
                                                       </Group>
-                                                      <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Component id="jPanel21" min="-2" max="-2" attributes="0"/>
                                               </Group>
@@ -1463,10 +1509,10 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="494" max="-2" attributes="0"/>
-                                      <Component id="jLabel38" min="-2" pref="213" max="-2" attributes="0"/>
+                                      <Component id="RiskRatingText" min="-2" pref="213" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="326" max="32767" attributes="0"/>
+                              <EmptySpace min="456" pref="281" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1474,15 +1520,15 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel38" min="-2" pref="41" max="-2" attributes="0"/>
+                              <Component id="RiskRatingText" min="-2" pref="41" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                              <Component id="jLabel39" min="-2" pref="38" max="-2" attributes="0"/>
+                              <Component id="VulnerabilityText" min="-2" pref="38" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel41" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel43" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="AttackVectorText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="AttackComplexityText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="PrivilegesText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ScopeText" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -1492,17 +1538,15 @@
                                   <Component id="scopeBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                              <Component id="jLabel44" min="-2" pref="38" max="-2" attributes="0"/>
+                              <Component id="CIAText" min="-2" pref="38" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel46" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel52" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel53" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ConfidentialityText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="IntegrityText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="AvailabilityText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="TraceabilityText" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel45" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="confidentialityBox" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="integrityBox" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1517,7 +1561,7 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel38">
+                    <Component class="javax.swing.JLabel" name="RiskRatingText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI Historic" size="18" style="0"/>
@@ -1525,7 +1569,7 @@
                         <Property name="text" type="java.lang.String" value="Risk Rating Calculator"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel39">
+                    <Component class="javax.swing.JLabel" name="VulnerabilityText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="0"/>
@@ -1533,22 +1577,22 @@
                         <Property name="text" type="java.lang.String" value="Vulnerability Identificaiton:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel40">
+                    <Component class="javax.swing.JLabel" name="AttackVectorText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Attack Vector:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel41">
+                    <Component class="javax.swing.JLabel" name="AttackComplexityText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Attack Complexity:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel42">
+                    <Component class="javax.swing.JLabel" name="PrivilegesText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Privileges Required:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel43">
+                    <Component class="javax.swing.JLabel" name="ScopeText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Scope:"/>
                       </Properties>
@@ -1575,7 +1619,7 @@
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel44">
+                    <Component class="javax.swing.JLabel" name="CIAText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="0"/>
@@ -1583,24 +1627,22 @@
                         <Property name="text" type="java.lang.String" value="CIA Impact Factors:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel45">
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel46">
+                    <Component class="javax.swing.JLabel" name="ConfidentialityText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Loss of Confidentiality:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel47">
+                    <Component class="javax.swing.JLabel" name="IntegrityText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Loss of Integrity:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel52">
+                    <Component class="javax.swing.JLabel" name="AvailabilityText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Loss of Availability:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel53">
+                    <Component class="javax.swing.JLabel" name="TraceabilityText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Loss of Traceability:"/>
                       </Properties>
@@ -1639,27 +1681,27 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel56" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ConsequencesText" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel57" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="FinancialDamageText" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="financialBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel60" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ReputationText" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="reputationBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel61" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="NonComplianceRiskText" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="nonComplianceBox" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="disruptionBox" min="-2" pref="99" max="-2" attributes="0"/>
-                                      <Component id="jLabel62" min="-2" max="-2" attributes="0"/>
+                                      <Component id="DisruptionOfServiceText" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="30" max="32767" attributes="0"/>
                               </Group>
@@ -1669,13 +1711,13 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel56" min="-2" pref="32" max="-2" attributes="0"/>
+                                  <Component id="ConsequencesText" min="-2" pref="32" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jLabel57" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel60" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel61" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel62" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="FinancialDamageText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ReputationText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="NonComplianceRiskText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="DisruptionOfServiceText" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1690,7 +1732,7 @@
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel56">
+                        <Component class="javax.swing.JLabel" name="ConsequencesText">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Segoe UI" size="14" style="0"/>
@@ -1703,7 +1745,7 @@
                             </Property>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel57">
+                        <Component class="javax.swing.JLabel" name="FinancialDamageText">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Financial Damage:"/>
                           </Properties>
@@ -1730,17 +1772,17 @@
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                           </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel60">
+                        <Component class="javax.swing.JLabel" name="ReputationText">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Reputation Damage:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel61">
+                        <Component class="javax.swing.JLabel" name="NonComplianceRiskText">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Non-Compliance:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel62">
+                        <Component class="javax.swing.JLabel" name="DisruptionOfServiceText">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Disruption of Service:"/>
                           </Properties>
@@ -1947,7 +1989,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="jPanel15">
+                <Container class="javax.swing.JPanel" name="SavePanel">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="tab8">
@@ -1965,16 +2007,16 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" attributes="0">
                                               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                                              <Component id="jLabel81" min="-2" pref="62" max="-2" attributes="0"/>
+                                              <Component id="MainImpactText" min="-2" pref="62" max="-2" attributes="0"/>
                                               <EmptySpace max="32767" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jLabel78" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="jLabel79" min="-2" pref="47" max="-2" attributes="0"/>
+                                                  <Component id="ImpactLowText" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="ImpactMediumText" min="-2" pref="47" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <Group type="102" attributes="0">
                                               <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="jLabel80" min="-2" pref="47" max="-2" attributes="0"/>
+                                              <Component id="ImpactHighText" min="-2" pref="47" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -1984,27 +2026,27 @@
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jPanel49" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jPanel47" min="-2" max="-2" attributes="0"/>
+                                              <Component id="leftMediumPanel" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jPanel40" min="-2" max="-2" attributes="0"/>
+                                              <Component id="LowPanel" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jPanel43" min="-2" max="-2" attributes="0"/>
+                                              <Component id="MiddleMediumpanel" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jPanel46" min="-2" max="-2" attributes="0"/>
+                                              <Component id="RightHighPanel" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jPanel39" min="-2" max="-2" attributes="0"/>
+                                              <Component id="RightMediumPanel" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jPanel44" min="-2" max="-2" attributes="0"/>
+                                              <Component id="TopHighPanel" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="jPanel45" min="-2" max="-2" attributes="0"/>
+                                              <Component id="CriticalPanel" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="503" max="-2" attributes="0"/>
-                                      <Component id="jLabel82" min="-2" pref="83" max="-2" attributes="0"/>
+                                      <Component id="MainLikelihoodText" min="-2" pref="83" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -2018,11 +2060,11 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="402" max="-2" attributes="0"/>
-                                      <Component id="jLabel76" min="-2" pref="47" max="-2" attributes="0"/>
+                                      <Component id="LikelihoodLowText" min="-2" pref="47" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
-                                      <Component id="jLabel77" min="-2" pref="47" max="-2" attributes="0"/>
+                                      <Component id="LikelihoodMediumText" min="-2" pref="47" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="176" max="-2" attributes="0"/>
-                                      <Component id="jLabel75" min="-2" pref="47" max="-2" attributes="0"/>
+                                      <Component id="LikelihoodHighText" min="-2" pref="47" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
@@ -2036,27 +2078,27 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jPanel39" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jPanel44" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jPanel45" min="-2" max="-2" attributes="0"/>
+                                          <Component id="RightMediumPanel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="TopHighPanel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="CriticalPanel" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jLabel80" min="-2" pref="29" max="-2" attributes="0"/>
+                                      <Component id="ImpactHighText" min="-2" pref="29" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jPanel40" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jPanel46" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="LowPanel" min="-2" max="-2" attributes="0"/>
+                                          <Component id="RightHighPanel" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="3" attributes="0">
-                                                  <Component id="jLabel79" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
-                                                  <Component id="jLabel81" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                                                  <Component id="ImpactMediumText" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                                                  <Component id="MainImpactText" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -2064,27 +2106,27 @@
                                           <Group type="102" attributes="0">
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jPanel47" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="leftMediumPanel" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jPanel48" alignment="0" min="-2" max="-2" attributes="0"/>
                                                   <Component id="jPanel49" alignment="0" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                              <Component id="jLabel78" min="-2" pref="29" max="-2" attributes="0"/>
+                                              <Component id="ImpactLowText" min="-2" pref="29" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
-                                  <Component id="jPanel43" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MiddleMediumpanel" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel75" min="-2" pref="29" max="-2" attributes="0"/>
-                                  <Component id="jLabel76" min="-2" pref="29" max="-2" attributes="0"/>
-                                  <Component id="jLabel77" min="-2" pref="29" max="-2" attributes="0"/>
+                                  <Component id="LikelihoodHighText" min="-2" pref="29" max="-2" attributes="0"/>
+                                  <Component id="LikelihoodLowText" min="-2" pref="29" max="-2" attributes="0"/>
+                                  <Component id="LikelihoodMediumText" min="-2" pref="29" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabel82" min="-2" pref="39" max="-2" attributes="0"/>
+                              <Component id="MainLikelihoodText" min="-2" pref="39" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel41" min="-2" max="-2" attributes="0"/>
                               <EmptySpace pref="75" max="32767" attributes="0"/>
@@ -2093,7 +2135,7 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Container class="javax.swing.JPanel" name="jPanel39">
+                    <Container class="javax.swing.JPanel" name="RightMediumPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="66" red="ff" type="rgb"/>
@@ -2105,7 +2147,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-                                  <Component id="jLabel85" min="-2" pref="72" max="-2" attributes="0"/>
+                                  <Component id="Medium4" min="-2" pref="72" max="-2" attributes="0"/>
                                   <EmptySpace pref="53" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -2114,21 +2156,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                  <Component id="jLabel85" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Medium4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="26" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel85">
+                        <Component class="javax.swing.JLabel" name="Medium4">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Medium - 4"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel40">
+                    <Container class="javax.swing.JPanel" name="LowPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="ff" red="ff" type="rgb"/>
@@ -2140,7 +2182,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
-                                  <Component id="jLabel84" min="-2" pref="50" max="-2" attributes="0"/>
+                                  <Component id="Low2Text" min="-2" pref="50" max="-2" attributes="0"/>
                                   <EmptySpace pref="64" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -2149,21 +2191,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="27" max="32767" attributes="0"/>
-                                  <Component id="jLabel84" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Low2Text" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel84">
+                        <Component class="javax.swing.JLabel" name="Low2Text">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Low - 2"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel43">
+                    <Container class="javax.swing.JPanel" name="MiddleMediumpanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="66" red="ff" type="rgb"/>
@@ -2175,7 +2217,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
-                                  <Component id="jLabel87" min="-2" pref="70" max="-2" attributes="0"/>
+                                  <Component id="Medium5Text" min="-2" pref="70" max="-2" attributes="0"/>
                                   <EmptySpace pref="53" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -2184,21 +2226,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                  <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Medium5Text" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="26" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel87">
+                        <Component class="javax.swing.JLabel" name="Medium5Text">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Medium - 5"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel44">
+                    <Container class="javax.swing.JPanel" name="TopHighPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="ff" type="rgb"/>
@@ -2210,7 +2252,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="88" max="32767" attributes="0"/>
-                                  <Component id="jLabel89" min="-2" pref="57" max="-2" attributes="0"/>
+                                  <Component id="High7Text" min="-2" pref="57" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -2219,21 +2261,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="27" max="32767" attributes="0"/>
-                                  <Component id="jLabel89" min="-2" max="-2" attributes="0"/>
+                                  <Component id="High7Text" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel89">
+                        <Component class="javax.swing.JLabel" name="High7Text">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="High - 7"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel45">
+                    <Container class="javax.swing.JPanel" name="CriticalPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="99" type="rgb"/>
@@ -2245,7 +2287,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="82" max="32767" attributes="0"/>
-                                  <Component id="jLabel91" min="-2" pref="76" max="-2" attributes="0"/>
+                                  <Component id="CriticalText" min="-2" pref="76" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -2254,21 +2296,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                  <Component id="jLabel91" min="-2" max="-2" attributes="0"/>
+                                  <Component id="CriticalText" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="26" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel91">
+                        <Component class="javax.swing.JLabel" name="CriticalText">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="Critical - 9+"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel46">
+                    <Container class="javax.swing.JPanel" name="RightHighPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="ff" type="rgb"/>
@@ -2280,7 +2322,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="87" max="32767" attributes="0"/>
-                                  <Component id="jLabel90" min="-2" pref="76" max="-2" attributes="0"/>
+                                  <Component id="High8Text" min="-2" pref="76" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -2289,21 +2331,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                  <Component id="jLabel90" min="-2" max="-2" attributes="0"/>
+                                  <Component id="High8Text" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="26" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLabel90">
+                        <Component class="javax.swing.JLabel" name="High8Text">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="High - 8"/>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Container class="javax.swing.JPanel" name="jPanel47">
+                    <Container class="javax.swing.JPanel" name="leftMediumPanel">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="66" red="ff" type="rgb"/>
@@ -2338,37 +2380,37 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JLabel" name="jLabel75">
+                    <Component class="javax.swing.JLabel" name="LikelihoodHighText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="High"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel76">
+                    <Component class="javax.swing.JLabel" name="LikelihoodLowText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Low"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel77">
+                    <Component class="javax.swing.JLabel" name="LikelihoodMediumText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Medium"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel78">
+                    <Component class="javax.swing.JLabel" name="ImpactLowText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Low"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel79">
+                    <Component class="javax.swing.JLabel" name="ImpactMediumText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Medium"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel80">
+                    <Component class="javax.swing.JLabel" name="ImpactHighText">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="High"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel81">
+                    <Component class="javax.swing.JLabel" name="MainImpactText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="0"/>
@@ -2376,7 +2418,7 @@
                         <Property name="text" type="java.lang.String" value="Impact"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel82">
+                    <Component class="javax.swing.JLabel" name="MainLikelihoodText">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="0"/>
@@ -2506,7 +2548,7 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel17">
+            <Container class="javax.swing.JPanel" name="SelectThreatPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -2520,7 +2562,7 @@
                 <Property name="useNullLayout" type="boolean" value="false"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel63">
+                <Component class="javax.swing.JLabel" name="SelectThreatText">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Select Threats"/>
                   </Properties>
@@ -2532,7 +2574,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel18">
+            <Container class="javax.swing.JPanel" name="TopRiskAssessmentPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -2546,7 +2588,7 @@
                 <Property name="useNullLayout" type="boolean" value="false"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel64">
+                <Component class="javax.swing.JLabel" name="RiskAssessmentPanel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Risk Assessment"/>
                   </Properties>
@@ -2558,7 +2600,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel10">
+            <Container class="javax.swing.JPanel" name="SaveTextPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="70" green="c3" red="2c" type="rgb"/>
@@ -2572,7 +2614,7 @@
                 <Property name="useNullLayout" type="boolean" value="false"/>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel58">
+                <Component class="javax.swing.JLabel" name="SaveTextLabel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Save"/>
                   </Properties>
@@ -2584,13 +2626,13 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="BackBtn">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Back"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton2MouseClicked"/>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="BackBtnMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BackBtnActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="Next">
@@ -2604,7 +2646,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="Homepage">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="tab4">
@@ -2619,18 +2661,16 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                          <Component id="HomepageTable" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                              <Component id="HomePageAssetPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                              <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
+                              <Component id="HomePageThreatPanel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
+                              <Component id="HomePageRiskPanel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="598" max="32767" attributes="0"/>
+                      <EmptySpace pref="882" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -2639,20 +2679,19 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jPanel4" max="32767" attributes="0"/>
-                          <Component id="jPanel3" max="32767" attributes="0"/>
-                          <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanel8" alignment="0" max="32767" attributes="0"/>
+                          <Component id="HomePageRiskPanel" max="32767" attributes="0"/>
+                          <Component id="HomePageAssetPanel" max="32767" attributes="0"/>
+                          <Component id="HomePageThreatPanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                      <Component id="HomepageTable" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="257" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel3">
+            <Container class="javax.swing.JPanel" name="HomePageAssetPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2666,11 +2705,11 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-                                  <Component id="jLabel9" min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="AssetHomepage_Text" min="-2" pref="47" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Asset_HomepageLable" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace pref="105" max="32767" attributes="0"/>
@@ -2681,21 +2720,21 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                          <Component id="Asset_HomepageLable" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel9" max="32767" attributes="0"/>
+                          <Component id="AssetHomepage_Text" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel5">
+                <Component class="javax.swing.JLabel" name="Asset_HomepageLable">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Assets:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel9">
+                <Component class="javax.swing.JLabel" name="AssetHomepage_Text">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="18" style="0"/>
@@ -2705,7 +2744,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel4">
+            <Container class="javax.swing.JPanel" name="HomePageRiskPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2722,7 +2761,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-                                  <Component id="jLabel11" min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="RiskCalc_Homepage" min="-2" pref="47" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
@@ -2739,7 +2778,7 @@
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel11" max="32767" attributes="0"/>
+                          <Component id="RiskCalc_Homepage" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -2751,7 +2790,7 @@
                     <Property name="text" type="java.lang.String" value="Risks Calcualted:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel11">
+                <Component class="javax.swing.JLabel" name="RiskCalc_Homepage">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="18" style="0"/>
@@ -2761,7 +2800,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel7">
+            <Container class="javax.swing.JPanel" name="HomePageThreatPanel">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2778,11 +2817,11 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-                                  <Component id="jLabel22" min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="Vuln_homepageLabel" min="-2" pref="47" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
+                                  <Component id="Vulnerabilitys_HomepageLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace pref="105" max="32767" attributes="0"/>
@@ -2793,21 +2832,21 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
+                          <Component id="Vulnerabilitys_HomepageLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel22" max="32767" attributes="0"/>
+                          <Component id="Vuln_homepageLabel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel19">
+                <Component class="javax.swing.JLabel" name="Vulnerabilitys_HomepageLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Vulnerabilitys:"/>
+                    <Property name="text" type="java.lang.String" value="Threats:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="jLabel22">
+                <Component class="javax.swing.JLabel" name="Vuln_homepageLabel">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="18" style="0"/>
@@ -2817,63 +2856,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel8">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[248, 82]"/>
-                </Property>
-              </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
-                                  <Component id="jLabel24" min="-2" pref="47" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace pref="48" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel24" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="jLabel23">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Remaining Assets for Risk assessmet:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel24">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Segoe UI" size="18" style="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="10"/>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="jPanel5">
+            <Container class="javax.swing.JPanel" name="HomepageTable">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2956,8 +2939,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel52" min="-2" pref="1407" max="-2" attributes="0"/>
-                          <Component id="jLabel103" min="-2" pref="226" max="-2" attributes="0"/>
+                          <Component id="ThreatTableBackground" min="-2" pref="1407" max="-2" attributes="0"/>
+                          <Component id="ThreatManagementText" min="-2" pref="226" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="290" max="32767" attributes="0"/>
                   </Group>
@@ -2967,16 +2950,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                      <Component id="jLabel103" min="-2" pref="55" max="-2" attributes="0"/>
+                      <Component id="ThreatManagementText" min="-2" pref="55" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                      <Component id="jPanel52" min="-2" pref="568" max="-2" attributes="0"/>
+                      <Component id="ThreatTableBackground" min="-2" pref="568" max="-2" attributes="0"/>
                       <EmptySpace pref="358" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel103">
+            <Component class="javax.swing.JLabel" name="ThreatManagementText">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="18" style="0"/>
@@ -2984,7 +2967,7 @@
                 <Property name="text" type="java.lang.String" value="Threat Management:"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JPanel" name="jPanel52">
+            <Container class="javax.swing.JPanel" name="ThreatTableBackground">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -2996,16 +2979,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel49" min="-2" pref="116" max="-2" attributes="0"/>
+                          <Component id="Showing_threats" min="-2" pref="116" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jButton10" min="-2" pref="124" max="-2" attributes="0"/>
+                          <Component id="Threat_Delete" min="-2" pref="121" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane9" min="-2" pref="223" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButton9" min="-2" pref="48" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                          <Component id="update_Threats" min="-2" pref="124" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="CreateNewThreat" min="-2" pref="124" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jScrollPane2" min="-2" pref="1430" max="-2" attributes="0"/>
@@ -3018,23 +2999,17 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane9" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                      <Component id="jButton9" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel49" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
-                                      <Component id="jButton10" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="Showing_threats" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="CreateNewThreat" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <Component id="update_Threats" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                               </Group>
+                              <Component id="Threat_Delete" max="32767" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Component id="jScrollPane2" min="-2" pref="519" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -3084,52 +3059,146 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane9">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JTextPane" name="jTextPane5">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                            <LineBorder>
-                              <Color PropertyName="color" blue="cc" green="cc" red="cc" type="rgb"/>
-                            </LineBorder>
-                          </Border>
-                        </Property>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI" size="14" style="0"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Component class="javax.swing.JLabel" name="jLabel8">
+                <Component class="javax.swing.JLabel" name="Showing_threats">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Search:"/>
+                    <Property name="text" type="java.lang.String" value="Showing: 42 Threats"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="jButton9">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Go"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="jLabel49">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Showing: 42 Assets"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JButton" name="jButton10">
+                <Component class="javax.swing.JButton" name="CreateNewThreat">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Create_New"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton10MouseClicked"/>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton10ActionPerformed"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="CreateNewThreatMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CreateNewThreatActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="update_Threats">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Update"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="update_ThreatsMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="update_ThreatsActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="Threat_Delete">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Delete"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Threat_DeleteMouseClicked"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="Threat_DeleteActionPerformed"/>
+                  </Events>
+                </Component>
+              </SubComponents>
+            </Container>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="Help">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="tab3">
+                <Property name="tabTitle" type="java.lang.String" value="tab3"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="HelpBackground" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="HelpBackground" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="349" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JPanel" name="HelpBackground">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="IntroductionHelpText" min="-2" pref="924" max="-2" attributes="0"/>
+                              <Component id="AssetManagementHelpText" min="-2" max="-2" attributes="0"/>
+                              <Component id="ThreatManagmentHelpText" min="-2" max="-2" attributes="0"/>
+                              <Component id="RiskScoreManagmentHelpText" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="AuditHelpText" alignment="0" min="-2" pref="554" max="-2" attributes="0"/>
+                              <Component id="RiskScoreHelpText" alignment="0" min="-2" pref="1263" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="820" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="IntroductionHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                          <Component id="AssetManagementHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                          <Component id="ThreatManagmentHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                          <Component id="RiskScoreManagmentHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                          <Component id="RiskScoreHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                          <Component id="AuditHelpText" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="214" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="AssetManagementHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Asset Management Tab: This tab allows you to manage the assets in the system. You can add, edit, and delete assets and view their details."/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="ThreatManagmentHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Threat Management Tab: This tab allows you to manage the threats in the system. You can add, edit, and delete threats and view their details. "/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="RiskScoreManagmentHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Risk Score Tab: This tab allows you to calculate the risk scores for each asset based on the likelihood and impact of the threats. You can view the risk scores for each asset in a table format."/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="RiskScoreHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="To calculate the risk scores, select the assets and threats from the respective tables, input the metrics that are displayed on  tab and click on the &#x201c;Next&#x201d; button, and the risk scores will be displayed in the &#x201c;Risk Scores&#x201d; table."/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="AuditHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="To output the audit , click on the &#x201c;Audit&#x201d; tab which will allow you to export the file."/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="IntroductionHelpText">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Introduction: This guide provides information on how to use the tool effectively and efficiently. The guide covers all the key features and functionalities of the tool."/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>

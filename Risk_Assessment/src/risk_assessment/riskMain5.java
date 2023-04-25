@@ -19,7 +19,11 @@ import java.time.format.DateTimeFormatter;
 
 
 import java.awt.Color;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.util.Collections;
 import java.util.Vector;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
@@ -46,59 +50,87 @@ private static ArrayList<String> Threat_Des=new ArrayList<>();
 
 private static ArrayList<String> date_time=new ArrayList<>();
 private static ArrayList<String> status=new ArrayList<>();
+
+private String calcLikelihood;
+private String calcImpact;
+    
+private String likelihoodCalcuation;
+private String impactCalcuation;
     /**
      * Creates new form riskMain
      */
     public riskMain5() {
         initComponents();
-        jTabbedPane1.setSelectedIndex(3);
-        
- 
-        
-     //   initAssetTable();
-     //   fillAssetList();
-        //setExtendedState(mainPage.MAXIMIZED_BOTH);
-        initTables();
-        riskMatrix();
-           
-        //test
-        slidertest();
-        riskMatrixTable();
-        
+        Tab_tabbedPane.setSelectedIndex(3);
+        initTables();  
         hideTabsandText();
     }
     
-    private String calcLikelihood;
-    private String calcImpact;
+
     
-   private String likelihoodCalcuation;
-    private String impactCalcuation;
+    public void setHome(){
+    Tab_tabbedPane.setSelectedIndex(3);
+    }
     
+    
+/**
+ * Initializes and populates four tables for asset management, threat management,
+ * risk score calculation, and home page display in the application. It populates
+ * the tables using data stored in various lists.
+ * 
+ * 1. Asset Management Table:
+ *    - Sets the first column width of the assetTable.
+ *    - Creates a DefaultTableModel object associated with the assetTable.
+ *    - Updates the table with assetNames and assetDes data.
+ *    - Updates the Asset_Showing and AssetHomepage_Text components with the number of assets.
+ *
+ * 2. Threat Management Table:
+ *    - Sets the first column width of the threat_table.
+ *    - Creates a DefaultTableModel object associated with the threat_table.
+ *    - Updates the table with Threat and Threat_Des data.
+ *    - Updates the Showing_threats and Vuln_homepageLabel components with the number of threats.
+ * 
+ * 3. Risk Score Table:
+ *    - Creates a DefaultTableModel object associated with the RiskScoreTable.
+ *    - Updates the table with assetNamesRisk, risk_vuln, likelihood, Impact, and riskScore data.
+ *    - Updates the Showing_RiskScore and RiskCalc_Homepage components with the number of risk scores.
+ * 
+ * 4. Home Page Table:
+ *    - Creates a DefaultTableModel object associated with the homePageTable.
+ *    - Updates the table with date_time and status data.
+ */
     public void initTables(){
         //Asset Management table
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(10);
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        assetTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+        DefaultTableModel model = (DefaultTableModel)assetTable.getModel();
+        model.setRowCount(0);
         Object rowData[] = new Object[3];
         for (int i =0; i < assetNames.size(); i++){
             rowData[1] = assetNames.get(i);
             rowData[2] = assetDes.get(i);
             model.addRow(rowData);
-            //delete, testing for navigation with jtable
-            model.addRow(rowData);
-            model.addRow(rowData);
-            list1.add(assetNames.get(i));
-        }
+            AssetList.add(assetNames.get(i));
+        } 
+         Asset_Showing.setText("Showing:" + assetNames.size()+ " Assets");
+        AssetHomepage_Text.setText(String.valueOf(assetNames.size()));
+
+
+
         
-        //Threat Management Table
+        //threat Management Table
         threat_table.getColumnModel().getColumn(0).setPreferredWidth(10);
         DefaultTableModel threat_tableModel = (DefaultTableModel)threat_table.getModel();
+        threat_tableModel.setRowCount(0);
         Object ThreatRowData[] = new Object[3];
         System.out.println(Threat.size());
         for (int i =0; i < Threat.size(); i++){
             ThreatRowData[1] = Threat.get(i);
             ThreatRowData[2] = Threat_Des.get(i);
+            ThreatList.add(Threat.get(i));
             threat_tableModel.addRow(ThreatRowData);
         }        
+        Showing_threats.setText("Showing:" + Threat.size()+ " Threats");
+        Vuln_homepageLabel.setText(String.valueOf(assetNames.size()));
         
         //Risk score table
         DefaultTableModel RiskScoreModel = (DefaultTableModel)RiskScoreTable.getModel();
@@ -111,9 +143,10 @@ private static ArrayList<String> status=new ArrayList<>();
          riskRowData[4] = riskScore.get(i);
          likelihoodCalcuation = likelihood.get(i);
          impactCalcuation = Impact.get(i);
-         calculateRiskScore();
          RiskScoreModel.addRow(riskRowData);
         }
+        Showing_RiskScore.setText("Showing:" + assetNamesRisk.size()+ " Risk Scores");
+        RiskCalc_Homepage.setText(String.valueOf(assetNamesRisk.size()));
         
         //homePageTabel
          DefaultTableModel homePage = (DefaultTableModel)homePageTable.getModel();
@@ -125,7 +158,11 @@ private static ArrayList<String> status=new ArrayList<>();
          }
         
     }
-    
+    /**
+ * Updates the "risk_score" table in the "test" database.
+ * This method retrieves the number of rows in the "risk_score" table and prints it to the console.
+ * This method does not modify any records in the table.
+ */
     public void updateRiskTable(){
         try {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -145,140 +182,31 @@ private static ArrayList<String> status=new ArrayList<>();
             rowCount = setRow.getInt(1);
             System.out.println("Number of rows:" + rowCount);
     }
-        
-        //Check if RiskScore is already in table
-        
-        
-        
-        
+
         } catch (Exception e) {
      System.out.println(e);
               }
         
     }
     
-    
-    
-    private int assignedValue; //delete maybe
-    private String textValue;
 
     @Override
     public void layout() {
         super.layout(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
-    public void calculateRiskScore(){
-        
-        switch (likelihoodCalcuation) {
-            case "Low":
-                switch (impactCalcuation) {
-                    case "Low":
-                        assignedValue = 1;
-                        textValue = "Low";
-                        break;
-                    case "Medium":
-                        textValue = "Low";
-                        assignedValue = 2;
-                        break;
-                    default: // High Impact
-                        textValue = "Medium";
-                        assignedValue = 4;
-                        break;
-                }
-                break;
-            case "Medium":
-                switch (impactCalcuation) {
-                    case "Low":
-                        textValue = "Low";
-                        assignedValue = 3;
-                        break;
-                    case "Medium":
-                        textValue = "Medium";
-                        assignedValue = 5;
-                        break;
-                    default: // High Impact
-                        textValue = "High";
-                        assignedValue = 7;
-                        break;
-                }
-                break;
-            default: // High Likelihood CHECK THIS
-                switch (impactCalcuation) {
-                    case "Low":
-                        textValue = "Medium";
-                        assignedValue = 6;
-                        break;
-                    case "Medium":
-                        textValue = "High";
-                        assignedValue = 8;
-                        break;
-                    default: // High Impact
-                        textValue = "Critical";
-                        assignedValue = 9;
-                        break;
-                }
-                break;
-        }
-        System.out.println(assignedValue + " calculateRiskScore() " + textValue);
-    
-    }
-//    
-//    public void fillAssetList(){
-//        assetSel.removeAllItems();
-//        assetSel.addItem("Select");   
-//        for(int i = 0; i < assetNames.size(); i++){
-//            assetSel.addItem(assetNames.get(i));
-//        }
-//    } 
+
     public void hideTabsandText(){
     //jTabbedPane2.setTabLayoutPolicy(jTabbedPane2.SCROLL_TAB_LAYOUT);
     jTabbedPane2.setLayout(new CardLayout()); 
-    jLabel30.setText(" ");
-    AssetTextOut.setText(" ");
-    jLabel36.setText("");
-    jLabel37.setText("");
-    jLabel96.setText("");
-    LikelihoodTextOut.setText("");
-    ImpactTextOut.setText("");
-    
+    SummaryAssetText.setText(" ");
+    SummarySelectedAssetText.setText(" ");
+    SummaryThreatText.setText("");
+    SummaryThreatSelectionText.setText("");
+    SummaryRiskScoreText.setText("");
+    SummaryLikelihoodText.setText("");
+    SummaryImpactTextOut.setText("");
+    }
 
-    
-//   jTable3.setRowSelectionAllowed(false);
-    
-//    jLabel30.setVisible(false);
-//    jLabel33.setVisible(false);
-//    jLabel31.setVisible(false);
-//    jLabel34.setVisible(false);
-    //jTabbedPane2.removeTabAt(0);
-    }
-    
-    public void riskMatrix(){
-//       jTable2.getModel().getValueAt(2, 2);
-    }
-    
-    
-    
-    /// Delete
-    public void slidertest(){
-//     int value = likeSlider.getValue();
-//     likeSlideOut.setText(Integer.toString(value));   
-     
-     //extra waffle
-     
-    list2.add("Malware");
-    list2.add("SQL attack");
-    list2.add("Denial of Service attacks");
-    
- 
-    }
-    
-    public void riskMatrixTable(){
-    // jTable2.removeColumn(jTable2.getColumnModel().getColumn(0));
-        
-        
-    }
-    public void CalculateFirstFormula(){
-        
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -299,88 +227,88 @@ private static ArrayList<String> status=new ArrayList<>();
         jTextPane3 = new javax.swing.JTextPane();
         jButton6 = new javax.swing.JButton();
         topBar = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        One = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        Two = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        LogoLabel = new javax.swing.JLabel();
+        BackgroundMain = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        NavigationBarPanel = new javax.swing.JPanel();
+        DashboardPanel = new javax.swing.JPanel();
+        Home_Icon = new javax.swing.JLabel();
+        DashboardJLabel = new javax.swing.JLabel();
+        ManagementPanel = new javax.swing.JPanel();
+        ManagementJLabel = new javax.swing.JLabel();
         AssetPanel = new javax.swing.JPanel();
         AssetPanelText = new javax.swing.JLabel();
-        Four = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        Two1 = new javax.swing.JPanel();
-        jLabel16 = new javax.swing.JLabel();
-        Three3 = new javax.swing.JPanel();
-        jLabel18 = new javax.swing.JLabel();
-        Three5 = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
-        Three6 = new javax.swing.JPanel();
-        jLabel21 = new javax.swing.JLabel();
-        Four1 = new javax.swing.JPanel();
-        jLabel31 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        ThreatPanel = new javax.swing.JPanel();
+        ThreatLabel = new javax.swing.JLabel();
+        FeaturesPanel = new javax.swing.JPanel();
+        FeaturesLabel = new javax.swing.JLabel();
+        RiskCalcPanel = new javax.swing.JPanel();
+        RiskCalcText = new javax.swing.JLabel();
+        AuditPanel = new javax.swing.JPanel();
+        AuditText = new javax.swing.JLabel();
+        HelpPanel = new javax.swing.JPanel();
+        HelpText = new javax.swing.JLabel();
+        RiskScorePanel = new javax.swing.JPanel();
+        RiskScoreText = new javax.swing.JLabel();
+        Tab_tabbedPane = new javax.swing.JTabbedPane();
         assetJpanel = new javax.swing.JPanel();
-        jLabel97 = new javax.swing.JLabel();
-        jPanel42 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel7 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jLabel32 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        AssetManagmentText = new javax.swing.JLabel();
+        AssetTableBackgroundPanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        assetTable = new javax.swing.JTable();
+        Asset_Showing = new javax.swing.JLabel();
+        createNewAsset = new javax.swing.JButton();
+        AssetUpdateBtn = new javax.swing.JButton();
+        AssetDeleteBtn = new javax.swing.JButton();
         risk_Score = new javax.swing.JPanel();
-        jLabel102 = new javax.swing.JLabel();
-        jPanel51 = new javax.swing.JPanel();
+        RiskScoreManagementText = new javax.swing.JLabel();
+        RiskScoreTableBackgroundPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         RiskScoreTable = new javax.swing.JTable();
-        jLabel48 = new javax.swing.JLabel();
+        Showing_RiskScore = new javax.swing.JLabel();
         Filter_Severity = new javax.swing.JButton();
+        RiskScoreDeleteBtn = new javax.swing.JButton();
         riskCalcTab = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
-        jLabel28 = new javax.swing.JLabel();
-        jPanel12 = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
-        jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        AssetTextOut = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
-        jLabel37 = new javax.swing.JLabel();
-        jLabel96 = new javax.swing.JLabel();
-        LikelihoodTextOut = new javax.swing.JLabel();
-        ImpactTextOut = new javax.swing.JLabel();
+        SelectAssetPanel = new javax.swing.JPanel();
+        SelectAssetText = new javax.swing.JLabel();
+        SummaryPanel = new javax.swing.JPanel();
+        TopSummaryPanel = new javax.swing.JPanel();
+        SummaryText = new javax.swing.JLabel();
+        SummaryAssetText = new javax.swing.JLabel();
+        SummarySelectedAssetText = new javax.swing.JLabel();
+        SummaryThreatText = new javax.swing.JLabel();
+        SummaryThreatSelectionText = new javax.swing.JLabel();
+        SummaryRiskScoreText = new javax.swing.JLabel();
+        SummaryLikelihoodText = new javax.swing.JLabel();
+        SummaryImpactTextOut = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        jPanel13 = new javax.swing.JPanel();
-        list1 = new java.awt.List();
-        jLabel100 = new javax.swing.JLabel();
-        jPanel20 = new javax.swing.JPanel();
-        list2 = new java.awt.List();
-        jLabel35 = new javax.swing.JLabel();
+        AssetSelectionPanel = new javax.swing.JPanel();
+        AssetList = new java.awt.List();
+        SelectAssetsLabel = new javax.swing.JLabel();
+        ThreatSelecitonPanel = new javax.swing.JPanel();
+        ThreatList = new java.awt.List();
+        SelectThreatLabel = new javax.swing.JLabel();
         calcRiskPanel = new javax.swing.JPanel();
-        jLabel38 = new javax.swing.JLabel();
-        jLabel39 = new javax.swing.JLabel();
-        jLabel40 = new javax.swing.JLabel();
-        jLabel41 = new javax.swing.JLabel();
-        jLabel42 = new javax.swing.JLabel();
-        jLabel43 = new javax.swing.JLabel();
+        RiskRatingText = new javax.swing.JLabel();
+        VulnerabilityText = new javax.swing.JLabel();
+        AttackVectorText = new javax.swing.JLabel();
+        AttackComplexityText = new javax.swing.JLabel();
+        PrivilegesText = new javax.swing.JLabel();
+        ScopeText = new javax.swing.JLabel();
         attackVectorBox = new javax.swing.JComboBox<>();
-        jLabel44 = new javax.swing.JLabel();
-        jLabel45 = new javax.swing.JLabel();
-        jLabel46 = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        jLabel52 = new javax.swing.JLabel();
-        jLabel53 = new javax.swing.JLabel();
+        CIAText = new javax.swing.JLabel();
+        ConfidentialityText = new javax.swing.JLabel();
+        IntegrityText = new javax.swing.JLabel();
+        AvailabilityText = new javax.swing.JLabel();
+        TraceabilityText = new javax.swing.JLabel();
         confidentialityBox = new javax.swing.JComboBox<>();
         jPanel21 = new javax.swing.JPanel();
-        jLabel56 = new javax.swing.JLabel();
-        jLabel57 = new javax.swing.JLabel();
+        ConsequencesText = new javax.swing.JLabel();
+        FinancialDamageText = new javax.swing.JLabel();
         financialBox = new javax.swing.JComboBox<>();
-        jLabel60 = new javax.swing.JLabel();
-        jLabel61 = new javax.swing.JLabel();
-        jLabel62 = new javax.swing.JLabel();
+        ReputationText = new javax.swing.JLabel();
+        NonComplianceRiskText = new javax.swing.JLabel();
+        DisruptionOfServiceText = new javax.swing.JLabel();
         reputationBox = new javax.swing.JComboBox<>();
         nonComplianceBox = new javax.swing.JComboBox<>();
         disruptionBox = new javax.swing.JComboBox<>();
@@ -390,29 +318,29 @@ private static ArrayList<String> status=new ArrayList<>();
         integrityBox = new javax.swing.JComboBox<>();
         availabilityBox = new javax.swing.JComboBox<>();
         tracabilityBox = new javax.swing.JComboBox<>();
-        jPanel15 = new javax.swing.JPanel();
-        jPanel39 = new javax.swing.JPanel();
-        jLabel85 = new javax.swing.JLabel();
-        jPanel40 = new javax.swing.JPanel();
-        jLabel84 = new javax.swing.JLabel();
-        jPanel43 = new javax.swing.JPanel();
-        jLabel87 = new javax.swing.JLabel();
-        jPanel44 = new javax.swing.JPanel();
-        jLabel89 = new javax.swing.JLabel();
-        jPanel45 = new javax.swing.JPanel();
-        jLabel91 = new javax.swing.JLabel();
-        jPanel46 = new javax.swing.JPanel();
-        jLabel90 = new javax.swing.JLabel();
-        jPanel47 = new javax.swing.JPanel();
+        SavePanel = new javax.swing.JPanel();
+        RightMediumPanel = new javax.swing.JPanel();
+        Medium4 = new javax.swing.JLabel();
+        LowPanel = new javax.swing.JPanel();
+        Low2Text = new javax.swing.JLabel();
+        MiddleMediumpanel = new javax.swing.JPanel();
+        Medium5Text = new javax.swing.JLabel();
+        TopHighPanel = new javax.swing.JPanel();
+        High7Text = new javax.swing.JLabel();
+        CriticalPanel = new javax.swing.JPanel();
+        CriticalText = new javax.swing.JLabel();
+        RightHighPanel = new javax.swing.JPanel();
+        High8Text = new javax.swing.JLabel();
+        leftMediumPanel = new javax.swing.JPanel();
         jLabel88 = new javax.swing.JLabel();
-        jLabel75 = new javax.swing.JLabel();
-        jLabel76 = new javax.swing.JLabel();
-        jLabel77 = new javax.swing.JLabel();
-        jLabel78 = new javax.swing.JLabel();
-        jLabel79 = new javax.swing.JLabel();
-        jLabel80 = new javax.swing.JLabel();
-        jLabel81 = new javax.swing.JLabel();
-        jLabel82 = new javax.swing.JLabel();
+        LikelihoodHighText = new javax.swing.JLabel();
+        LikelihoodLowText = new javax.swing.JLabel();
+        LikelihoodMediumText = new javax.swing.JLabel();
+        ImpactLowText = new javax.swing.JLabel();
+        ImpactMediumText = new javax.swing.JLabel();
+        ImpactHighText = new javax.swing.JLabel();
+        MainImpactText = new javax.swing.JLabel();
+        MainLikelihoodText = new javax.swing.JLabel();
         jPanel48 = new javax.swing.JPanel();
         jLabel83 = new javax.swing.JLabel();
         jPanel49 = new javax.swing.JPanel();
@@ -420,41 +348,44 @@ private static ArrayList<String> status=new ArrayList<>();
         jPanel41 = new javax.swing.JPanel();
         jLabel94 = new javax.swing.JLabel();
         riskScoreTextOut = new javax.swing.JLabel();
-        jPanel17 = new javax.swing.JPanel();
-        jLabel63 = new javax.swing.JLabel();
-        jPanel18 = new javax.swing.JPanel();
-        jLabel64 = new javax.swing.JLabel();
-        jPanel10 = new javax.swing.JPanel();
-        jLabel58 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        SelectThreatPanel = new javax.swing.JPanel();
+        SelectThreatText = new javax.swing.JLabel();
+        TopRiskAssessmentPanel = new javax.swing.JPanel();
+        RiskAssessmentPanel = new javax.swing.JLabel();
+        SaveTextPanel = new javax.swing.JPanel();
+        SaveTextLabel = new javax.swing.JLabel();
+        BackBtn = new javax.swing.JButton();
         Next = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        Homepage = new javax.swing.JPanel();
+        HomePageAssetPanel = new javax.swing.JPanel();
+        Asset_HomepageLable = new javax.swing.JLabel();
+        AssetHomepage_Text = new javax.swing.JLabel();
+        HomePageRiskPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
+        RiskCalc_Homepage = new javax.swing.JLabel();
+        HomePageThreatPanel = new javax.swing.JPanel();
+        Vulnerabilitys_HomepageLabel = new javax.swing.JLabel();
+        Vuln_homepageLabel = new javax.swing.JLabel();
+        HomepageTable = new javax.swing.JPanel();
         jScrollPane10 = new javax.swing.JScrollPane();
         homePageTable = new javax.swing.JTable();
         ThreatJPanel = new javax.swing.JPanel();
-        jLabel103 = new javax.swing.JLabel();
-        jPanel52 = new javax.swing.JPanel();
+        ThreatManagementText = new javax.swing.JLabel();
+        ThreatTableBackground = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         threat_table = new javax.swing.JTable();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        jTextPane5 = new javax.swing.JTextPane();
-        jLabel8 = new javax.swing.JLabel();
-        jButton9 = new javax.swing.JButton();
-        jLabel49 = new javax.swing.JLabel();
-        jButton10 = new javax.swing.JButton();
+        Showing_threats = new javax.swing.JLabel();
+        CreateNewThreat = new javax.swing.JButton();
+        update_Threats = new javax.swing.JButton();
+        Threat_Delete = new javax.swing.JButton();
+        Help = new javax.swing.JPanel();
+        HelpBackground = new javax.swing.JPanel();
+        AssetManagementHelpText = new javax.swing.JLabel();
+        ThreatManagmentHelpText = new javax.swing.JLabel();
+        RiskScoreManagmentHelpText = new javax.swing.JLabel();
+        RiskScoreHelpText = new javax.swing.JLabel();
+        AuditHelpText = new javax.swing.JLabel();
+        IntroductionHelpText = new javax.swing.JLabel();
 
         jFrame1.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jFrame1.setAlwaysOnTop(true);
@@ -552,100 +483,135 @@ private static ArrayList<String> status=new ArrayList<>();
         topBar.setBackground(new java.awt.Color(255, 255, 255));
         topBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risk_assessment/assets/MainLogo.png"))); // NOI18N
+        LogoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risk_assessment/assets/MainLogo.png"))); // NOI18N
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tick", "Assets", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jTable1.setRowHeight(60);
+        BackgroundMain.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(30);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Likelihood");
+        }
 
         javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
         topBar.setLayout(topBarLayout);
         topBarLayout.setHorizontalGroup(
             topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(topBarLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1630, Short.MAX_VALUE))
+                .addGroup(topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(topBarLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(LogoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(topBarLayout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addComponent(BackgroundMain, javax.swing.GroupLayout.PREFERRED_SIZE, 1430, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(347, Short.MAX_VALUE))
         );
         topBarLayout.setVerticalGroup(
             topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(topBarLayout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(LogoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BackgroundMain, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getContentPane().add(topBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1920, 60));
 
-        jPanel1.setBackground(new java.awt.Color(44, 195, 112));
+        NavigationBarPanel.setBackground(new java.awt.Color(44, 195, 112));
 
-        One.setBackground(new java.awt.Color(44, 195, 112));
-        One.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        One.setMinimumSize(new java.awt.Dimension(200, 111));
-        One.setPreferredSize(new java.awt.Dimension(200, 111));
-        One.addMouseListener(new java.awt.event.MouseAdapter() {
+        DashboardPanel.setBackground(new java.awt.Color(44, 195, 112));
+        DashboardPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        DashboardPanel.setMinimumSize(new java.awt.Dimension(200, 111));
+        DashboardPanel.setPreferredSize(new java.awt.Dimension(200, 111));
+        DashboardPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DashboardPanelMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                OneMouseEntered(evt);
+                DashboardPanelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                OneMouseExited(evt);
+                DashboardPanelMouseExited(evt);
             }
         });
 
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risk_assessment/assets/Home.png"))); // NOI18N
+        Home_Icon.setBackground(new java.awt.Color(255, 255, 255));
+        Home_Icon.setForeground(new java.awt.Color(255, 255, 255));
+        Home_Icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risk_assessment/assets/Home.png"))); // NOI18N
 
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("Cambria Math", 0, 18)); // NOI18N
-        jLabel1.setText("My Dashboard");
+        DashboardJLabel.setBackground(new java.awt.Color(0, 0, 0));
+        DashboardJLabel.setFont(new java.awt.Font("Cambria Math", 0, 18)); // NOI18N
+        DashboardJLabel.setText("My Dashboard");
 
-        javax.swing.GroupLayout OneLayout = new javax.swing.GroupLayout(One);
-        One.setLayout(OneLayout);
-        OneLayout.setHorizontalGroup(
-            OneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OneLayout.createSequentialGroup()
+        javax.swing.GroupLayout DashboardPanelLayout = new javax.swing.GroupLayout(DashboardPanel);
+        DashboardPanel.setLayout(DashboardPanelLayout);
+        DashboardPanelLayout.setHorizontalGroup(
+            DashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(DashboardPanelLayout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addComponent(jLabel3)
+                .addComponent(Home_Icon)
                 .addContainerGap(65, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, OneLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DashboardPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(DashboardJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
-        OneLayout.setVerticalGroup(
-            OneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OneLayout.createSequentialGroup()
+        DashboardPanelLayout.setVerticalGroup(
+            DashboardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(DashboardPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Home_Icon, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(DashboardJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        Two.setBackground(new java.awt.Color(44, 195, 112));
-        Two.setMinimumSize(new java.awt.Dimension(200, 111));
-        Two.addMouseListener(new java.awt.event.MouseAdapter() {
+        ManagementPanel.setBackground(new java.awt.Color(44, 195, 112));
+        ManagementPanel.setMinimumSize(new java.awt.Dimension(200, 111));
+        ManagementPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                TwoMouseEntered(evt);
+                ManagementPanelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                TwoMouseExited(evt);
+                ManagementPanelMouseExited(evt);
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel4.setText("Management");
+        ManagementJLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        ManagementJLabel.setText("Management");
 
-        javax.swing.GroupLayout TwoLayout = new javax.swing.GroupLayout(Two);
-        Two.setLayout(TwoLayout);
-        TwoLayout.setHorizontalGroup(
-            TwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TwoLayout.createSequentialGroup()
+        javax.swing.GroupLayout ManagementPanelLayout = new javax.swing.GroupLayout(ManagementPanel);
+        ManagementPanel.setLayout(ManagementPanelLayout);
+        ManagementPanelLayout.setHorizontalGroup(
+            ManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ManagementPanelLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(jLabel4)
+                .addComponent(ManagementJLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        TwoLayout.setVerticalGroup(
-            TwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(TwoLayout.createSequentialGroup()
+        ManagementPanelLayout.setVerticalGroup(
+            ManagementPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ManagementPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
+                .addComponent(ManagementJLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -687,222 +653,232 @@ private static ArrayList<String> status=new ArrayList<>();
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        Four.setBackground(new java.awt.Color(44, 195, 112));
-        Four.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Four.setMinimumSize(new java.awt.Dimension(200, 111));
-        Four.addMouseListener(new java.awt.event.MouseAdapter() {
+        ThreatPanel.setBackground(new java.awt.Color(44, 195, 112));
+        ThreatPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ThreatPanel.setMinimumSize(new java.awt.Dimension(200, 111));
+        ThreatPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                FourMouseClicked(evt);
+                ThreatPanelMouseClicked(evt);
             }
         });
 
-        jLabel6.setText("Threat");
-        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+        ThreatLabel.setText("Threat");
+        ThreatLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel6MouseClicked(evt);
+                ThreatLabelMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout FourLayout = new javax.swing.GroupLayout(Four);
-        Four.setLayout(FourLayout);
-        FourLayout.setHorizontalGroup(
-            FourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FourLayout.createSequentialGroup()
+        javax.swing.GroupLayout ThreatPanelLayout = new javax.swing.GroupLayout(ThreatPanel);
+        ThreatPanel.setLayout(ThreatPanelLayout);
+        ThreatPanelLayout.setHorizontalGroup(
+            ThreatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ThreatPanelLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
-                .addComponent(jLabel6)
+                .addComponent(ThreatLabel)
                 .addContainerGap(83, Short.MAX_VALUE))
         );
-        FourLayout.setVerticalGroup(
-            FourLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FourLayout.createSequentialGroup()
+        ThreatPanelLayout.setVerticalGroup(
+            ThreatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ThreatPanelLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel6)
+                .addComponent(ThreatLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Two1.setBackground(new java.awt.Color(44, 195, 112));
-        Two1.setMinimumSize(new java.awt.Dimension(200, 111));
-        Two1.addMouseListener(new java.awt.event.MouseAdapter() {
+        FeaturesPanel.setBackground(new java.awt.Color(44, 195, 112));
+        FeaturesPanel.setMinimumSize(new java.awt.Dimension(200, 111));
+        FeaturesPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                Two1MouseEntered(evt);
+                FeaturesPanelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                Two1MouseExited(evt);
+                FeaturesPanelMouseExited(evt);
             }
         });
 
-        jLabel16.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel16.setText("Features");
+        FeaturesLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        FeaturesLabel.setText("Features");
 
-        javax.swing.GroupLayout Two1Layout = new javax.swing.GroupLayout(Two1);
-        Two1.setLayout(Two1Layout);
-        Two1Layout.setHorizontalGroup(
-            Two1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Two1Layout.createSequentialGroup()
+        javax.swing.GroupLayout FeaturesPanelLayout = new javax.swing.GroupLayout(FeaturesPanel);
+        FeaturesPanel.setLayout(FeaturesPanelLayout);
+        FeaturesPanelLayout.setHorizontalGroup(
+            FeaturesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FeaturesPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
+                .addComponent(FeaturesLabel)
                 .addGap(64, 64, 64))
         );
-        Two1Layout.setVerticalGroup(
-            Two1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Two1Layout.createSequentialGroup()
+        FeaturesPanelLayout.setVerticalGroup(
+            FeaturesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FeaturesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel16)
+                .addComponent(FeaturesLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Three3.setBackground(new java.awt.Color(44, 195, 112));
-        Three3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Three3.addMouseListener(new java.awt.event.MouseAdapter() {
+        RiskCalcPanel.setBackground(new java.awt.Color(44, 195, 112));
+        RiskCalcPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        RiskCalcPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Three3MouseClicked(evt);
+                RiskCalcPanelMouseClicked(evt);
             }
         });
 
-        jLabel18.setText("Risk Calculator");
+        RiskCalcText.setText("Risk Calculator");
 
-        javax.swing.GroupLayout Three3Layout = new javax.swing.GroupLayout(Three3);
-        Three3.setLayout(Three3Layout);
-        Three3Layout.setHorizontalGroup(
-            Three3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three3Layout.createSequentialGroup()
+        javax.swing.GroupLayout RiskCalcPanelLayout = new javax.swing.GroupLayout(RiskCalcPanel);
+        RiskCalcPanel.setLayout(RiskCalcPanelLayout);
+        RiskCalcPanelLayout.setHorizontalGroup(
+            RiskCalcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RiskCalcPanelLayout.createSequentialGroup()
                 .addGap(75, 75, 75)
-                .addComponent(jLabel18)
+                .addComponent(RiskCalcText)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        Three3Layout.setVerticalGroup(
-            Three3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three3Layout.createSequentialGroup()
+        RiskCalcPanelLayout.setVerticalGroup(
+            RiskCalcPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RiskCalcPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel18)
+                .addComponent(RiskCalcText)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        Three5.setBackground(new java.awt.Color(44, 195, 112));
-        Three5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        AuditPanel.setBackground(new java.awt.Color(44, 195, 112));
+        AuditPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        AuditPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AuditPanelMouseClicked(evt);
+            }
+        });
 
-        jLabel20.setText("Audit");
+        AuditText.setText("Audit");
 
-        javax.swing.GroupLayout Three5Layout = new javax.swing.GroupLayout(Three5);
-        Three5.setLayout(Three5Layout);
-        Three5Layout.setHorizontalGroup(
-            Three5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three5Layout.createSequentialGroup()
+        javax.swing.GroupLayout AuditPanelLayout = new javax.swing.GroupLayout(AuditPanel);
+        AuditPanel.setLayout(AuditPanelLayout);
+        AuditPanelLayout.setHorizontalGroup(
+            AuditPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AuditPanelLayout.createSequentialGroup()
                 .addGap(79, 79, 79)
-                .addComponent(jLabel20)
+                .addComponent(AuditText)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        Three5Layout.setVerticalGroup(
-            Three5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three5Layout.createSequentialGroup()
+        AuditPanelLayout.setVerticalGroup(
+            AuditPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AuditPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel20)
+                .addComponent(AuditText)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        Three6.setBackground(new java.awt.Color(44, 195, 112));
-        Three6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        HelpPanel.setBackground(new java.awt.Color(44, 195, 112));
+        HelpPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        HelpPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                HelpPanelMouseClicked(evt);
+            }
+        });
 
-        jLabel21.setText("Help");
+        HelpText.setText("Help");
 
-        javax.swing.GroupLayout Three6Layout = new javax.swing.GroupLayout(Three6);
-        Three6.setLayout(Three6Layout);
-        Three6Layout.setHorizontalGroup(
-            Three6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three6Layout.createSequentialGroup()
+        javax.swing.GroupLayout HelpPanelLayout = new javax.swing.GroupLayout(HelpPanel);
+        HelpPanel.setLayout(HelpPanelLayout);
+        HelpPanelLayout.setHorizontalGroup(
+            HelpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpPanelLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
-                .addComponent(jLabel21)
+                .addComponent(HelpText)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        Three6Layout.setVerticalGroup(
-            Three6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Three6Layout.createSequentialGroup()
+        HelpPanelLayout.setVerticalGroup(
+            HelpPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpPanelLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel21)
+                .addComponent(HelpText)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        Four1.setBackground(new java.awt.Color(44, 195, 112));
-        Four1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Four1.setMinimumSize(new java.awt.Dimension(200, 111));
-        Four1.addMouseListener(new java.awt.event.MouseAdapter() {
+        RiskScorePanel.setBackground(new java.awt.Color(44, 195, 112));
+        RiskScorePanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        RiskScorePanel.setMinimumSize(new java.awt.Dimension(200, 111));
+        RiskScorePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Four1MouseClicked(evt);
+                RiskScorePanelMouseClicked(evt);
             }
         });
 
-        jLabel31.setText("Risk Score");
-        jLabel31.addMouseListener(new java.awt.event.MouseAdapter() {
+        RiskScoreText.setText("Risk Score");
+        RiskScoreText.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel31MouseClicked(evt);
+                RiskScoreTextMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout Four1Layout = new javax.swing.GroupLayout(Four1);
-        Four1.setLayout(Four1Layout);
-        Four1Layout.setHorizontalGroup(
-            Four1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Four1Layout.createSequentialGroup()
+        javax.swing.GroupLayout RiskScorePanelLayout = new javax.swing.GroupLayout(RiskScorePanel);
+        RiskScorePanel.setLayout(RiskScorePanelLayout);
+        RiskScorePanelLayout.setHorizontalGroup(
+            RiskScorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RiskScorePanelLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
-                .addComponent(jLabel31)
+                .addComponent(RiskScoreText)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        Four1Layout.setVerticalGroup(
-            Four1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(Four1Layout.createSequentialGroup()
+        RiskScorePanelLayout.setVerticalGroup(
+            RiskScorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RiskScorePanelLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel31)
+                .addComponent(RiskScoreText)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(One, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-            .addComponent(Two, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Four, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        javax.swing.GroupLayout NavigationBarPanelLayout = new javax.swing.GroupLayout(NavigationBarPanel);
+        NavigationBarPanel.setLayout(NavigationBarPanelLayout);
+        NavigationBarPanelLayout.setHorizontalGroup(
+            NavigationBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(DashboardPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+            .addComponent(ManagementPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, NavigationBarPanelLayout.createSequentialGroup()
+                .addGroup(NavigationBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ThreatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(AssetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Two1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Three3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Three5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Three6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Four1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(FeaturesPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(RiskCalcPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(AuditPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(HelpPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(RiskScorePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(One, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+        NavigationBarPanelLayout.setVerticalGroup(
+            NavigationBarPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(NavigationBarPanelLayout.createSequentialGroup()
+                .addComponent(DashboardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Two, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ManagementPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(AssetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Four, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ThreatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Four1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RiskScorePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Two1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(FeaturesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Three3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RiskCalcPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Three5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AuditPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(Three6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(HelpPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(416, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 200, 960));
+        getContentPane().add(NavigationBarPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 200, 960));
 
-        jLabel97.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel97.setText("Asset Management:");
+        AssetManagmentText.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        AssetManagmentText.setText("Asset Management:");
 
-        jPanel42.setBackground(new java.awt.Color(255, 255, 255));
+        AssetTableBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        assetTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -918,75 +894,84 @@ private static ArrayList<String> status=new ArrayList<>();
                 return types [columnIndex];
             }
         });
-        jTable1.setRowHeight(60);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(30);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(30);
-            jTable1.getColumnModel().getColumn(2).setHeaderValue("Likelihood");
+        assetTable.setRowHeight(60);
+        jScrollPane3.setViewportView(assetTable);
+        if (assetTable.getColumnModel().getColumnCount() > 0) {
+            assetTable.getColumnModel().getColumn(0).setMinWidth(30);
+            assetTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+            assetTable.getColumnModel().getColumn(0).setMaxWidth(30);
         }
 
-        jTextPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jTextPane1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jScrollPane5.setViewportView(jTextPane1);
+        Asset_Showing.setText("Showing: 42 Assets");
 
-        jLabel7.setText("Search:");
-
-        jButton4.setText("Go");
-
-        jLabel32.setText("Showing: 42 Assets");
-
-        jButton5.setText("Create_New");
-        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+        createNewAsset.setText("Create_New");
+        createNewAsset.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton5MouseClicked(evt);
+                createNewAssetMouseClicked(evt);
             }
         });
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        createNewAsset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                createNewAssetActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel42Layout = new javax.swing.GroupLayout(jPanel42);
-        jPanel42.setLayout(jPanel42Layout);
-        jPanel42Layout.setHorizontalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel42Layout.createSequentialGroup()
+        AssetUpdateBtn.setText("Update");
+        AssetUpdateBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AssetUpdateBtnMouseClicked(evt);
+            }
+        });
+        AssetUpdateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AssetUpdateBtnActionPerformed(evt);
+            }
+        });
+
+        AssetDeleteBtn.setText("Delete Selected");
+        AssetDeleteBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AssetDeleteBtnMouseClicked(evt);
+            }
+        });
+        AssetDeleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AssetDeleteBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout AssetTableBackgroundPanelLayout = new javax.swing.GroupLayout(AssetTableBackgroundPanel);
+        AssetTableBackgroundPanel.setLayout(AssetTableBackgroundPanelLayout);
+        AssetTableBackgroundPanelLayout.setHorizontalGroup(
+            AssetTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AssetTableBackgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Asset_Showing, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AssetDeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
+                .addComponent(AssetUpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33))
-            .addGroup(jPanel42Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(createNewAsset, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32))
+            .addGroup(AssetTableBackgroundPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel42Layout.setVerticalGroup(
-            jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel42Layout.createSequentialGroup()
+        AssetTableBackgroundPanelLayout.setVerticalGroup(
+            AssetTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AssetTableBackgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel42Layout.createSequentialGroup()
-                        .addGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel42Layout.createSequentialGroup()
+                .addGroup(AssetTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(AssetTableBackgroundPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(AssetTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Asset_Showing, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(createNewAsset, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(AssetUpdateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(AssetDeleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout assetJpanelLayout = new javax.swing.GroupLayout(assetJpanel);
@@ -996,33 +981,33 @@ private static ArrayList<String> status=new ArrayList<>();
             .addGroup(assetJpanelLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(assetJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel97, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel42, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(AssetTableBackgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AssetManagmentText, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(290, Short.MAX_VALUE))
         );
         assetJpanelLayout.setVerticalGroup(
             assetJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(assetJpanelLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel97, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jPanel42, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addComponent(AssetManagmentText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(AssetTableBackgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(361, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab3", assetJpanel);
+        Tab_tabbedPane.addTab("tab3", assetJpanel);
 
-        jLabel102.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel102.setText("Risk Score Management:");
+        RiskScoreManagementText.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        RiskScoreManagementText.setText("Risk Score Management:");
 
-        jPanel51.setBackground(new java.awt.Color(255, 255, 255));
+        RiskScoreTableBackgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         RiskScoreTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "AssetName/s", "Risk Vulnerability", "Risk Likelihood", "Risk_Impact", "Risk Score"
+                "AssetName/s", "Threat", "Risk Likelihood", "Risk_Impact", "Risk Score"
             }
         ) {
             Class[] types = new Class [] {
@@ -1036,7 +1021,7 @@ private static ArrayList<String> status=new ArrayList<>();
         RiskScoreTable.setRowHeight(60);
         jScrollPane4.setViewportView(RiskScoreTable);
 
-        jLabel48.setText("Showing: 23");
+        Showing_RiskScore.setText("Showing: 23");
 
         Filter_Severity.setText("Filter Severity");
         Filter_Severity.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1050,28 +1035,39 @@ private static ArrayList<String> status=new ArrayList<>();
             }
         });
 
-        javax.swing.GroupLayout jPanel51Layout = new javax.swing.GroupLayout(jPanel51);
-        jPanel51.setLayout(jPanel51Layout);
-        jPanel51Layout.setHorizontalGroup(
-            jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel51Layout.createSequentialGroup()
+        RiskScoreDeleteBtn.setText("Delete Selected");
+        RiskScoreDeleteBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                RiskScoreDeleteBtnMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout RiskScoreTableBackgroundPanelLayout = new javax.swing.GroupLayout(RiskScoreTableBackgroundPanel);
+        RiskScoreTableBackgroundPanel.setLayout(RiskScoreTableBackgroundPanelLayout);
+        RiskScoreTableBackgroundPanelLayout.setHorizontalGroup(
+            RiskScoreTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(RiskScoreTableBackgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Showing_RiskScore, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(RiskScoreDeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Filter_Severity, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel51Layout.createSequentialGroup()
+            .addGroup(RiskScoreTableBackgroundPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel51Layout.setVerticalGroup(
-            jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel51Layout.createSequentialGroup()
+        RiskScoreTableBackgroundPanelLayout.setVerticalGroup(
+            RiskScoreTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RiskScoreTableBackgroundPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Filter_Severity, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(RiskScoreTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RiskScoreDeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(RiskScoreTableBackgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Showing_RiskScore, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Filter_Severity, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1084,213 +1080,213 @@ private static ArrayList<String> status=new ArrayList<>();
             .addGroup(risk_ScoreLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(risk_ScoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel51, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel102, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(RiskScoreTableBackgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RiskScoreManagementText, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(291, Short.MAX_VALUE))
         );
         risk_ScoreLayout.setVerticalGroup(
             risk_ScoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(risk_ScoreLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel102, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RiskScoreManagementText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel51, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RiskScoreTableBackgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(360, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab2", risk_Score);
+        Tab_tabbedPane.addTab("tab2", risk_Score);
 
-        jPanel9.setBackground(new java.awt.Color(44, 195, 112));
-        jPanel9.setPreferredSize(new java.awt.Dimension(245, 64));
-        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        SelectAssetPanel.setBackground(new java.awt.Color(44, 195, 112));
+        SelectAssetPanel.setPreferredSize(new java.awt.Dimension(245, 64));
+        SelectAssetPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel28.setText("Select Asset");
-        jPanel9.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, -1, -1));
+        SelectAssetText.setText("Select Asset");
+        SelectAssetPanel.add(SelectAssetText, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, -1, -1));
 
-        jPanel12.setBackground(new java.awt.Color(204, 204, 204));
+        SummaryPanel.setBackground(new java.awt.Color(204, 204, 204));
 
-        jPanel11.setBackground(new java.awt.Color(44, 195, 112));
+        TopSummaryPanel.setBackground(new java.awt.Color(44, 195, 112));
 
-        jLabel29.setFont(new java.awt.Font("Malgun Gothic", 1, 12)); // NOI18N
-        jLabel29.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel29.setText(" Summary");
+        SummaryText.setFont(new java.awt.Font("Malgun Gothic", 1, 12)); // NOI18N
+        SummaryText.setForeground(new java.awt.Color(255, 255, 255));
+        SummaryText.setText(" Summary");
 
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+        javax.swing.GroupLayout TopSummaryPanelLayout = new javax.swing.GroupLayout(TopSummaryPanel);
+        TopSummaryPanel.setLayout(TopSummaryPanelLayout);
+        TopSummaryPanelLayout.setHorizontalGroup(
+            TopSummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopSummaryPanelLayout.createSequentialGroup()
                 .addContainerGap(121, Short.MAX_VALUE)
-                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryText, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(127, 127, 127))
         );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createSequentialGroup()
+        TopSummaryPanelLayout.setVerticalGroup(
+            TopSummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TopSummaryPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryText, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jLabel30.setText("Asset:");
+        SummaryAssetText.setText("Asset:");
 
-        AssetTextOut.setText("0");
+        SummarySelectedAssetText.setText("0");
 
-        jLabel36.setText("Threat:");
+        SummaryThreatText.setText("Threat:");
 
-        jLabel37.setText("0");
+        SummaryThreatSelectionText.setText("0");
 
-        jLabel96.setText("Risk Score:");
+        SummaryRiskScoreText.setText("Risk Score:");
 
-        LikelihoodTextOut.setText("0");
+        SummaryLikelihoodText.setText("0");
 
-        ImpactTextOut.setText("0");
+        SummaryImpactTextOut.setText("0");
 
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel12Layout.createSequentialGroup()
+        javax.swing.GroupLayout SummaryPanelLayout = new javax.swing.GroupLayout(SummaryPanel);
+        SummaryPanel.setLayout(SummaryPanelLayout);
+        SummaryPanelLayout.setHorizontalGroup(
+            SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(TopSummaryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(SummaryPanelLayout.createSequentialGroup()
+                .addGroup(SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(SummaryPanelLayout.createSequentialGroup()
                             .addGap(46, 46, 46)
-                            .addComponent(AssetTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addComponent(SummarySelectedAssetText, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(SummaryPanelLayout.createSequentialGroup()
                             .addGap(18, 18, 18)
-                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel96, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addGroup(SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(SummaryAssetText, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SummaryThreatText, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SummaryRiskScoreText, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(SummaryPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ImpactTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(LikelihoodTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(SummaryImpactTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SummaryLikelihoodText, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SummaryThreatSelectionText, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(55, Short.MAX_VALUE))
         );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        SummaryPanelLayout.setVerticalGroup(
+            SummaryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SummaryPanelLayout.createSequentialGroup()
+                .addComponent(TopSummaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryAssetText, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(AssetTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummarySelectedAssetText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryThreatText, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryThreatSelectionText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel96, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryRiskScoreText, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LikelihoodTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryLikelihoodText, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ImpactTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SummaryImpactTextOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 253, Short.MAX_VALUE))
         );
 
-        list1.setMultipleMode(true);
-        list1.addActionListener(new java.awt.event.ActionListener() {
+        AssetList.setMultipleMode(true);
+        AssetList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                list1ActionPerformed(evt);
+                AssetListActionPerformed(evt);
             }
         });
 
-        jLabel100.setText("Select Assets: ");
+        SelectAssetsLabel.setText("Select Assets: ");
 
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(list1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel13Layout.createSequentialGroup()
+        javax.swing.GroupLayout AssetSelectionPanelLayout = new javax.swing.GroupLayout(AssetSelectionPanel);
+        AssetSelectionPanel.setLayout(AssetSelectionPanelLayout);
+        AssetSelectionPanelLayout.setHorizontalGroup(
+            AssetSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(AssetList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(AssetSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel100)
+                .addComponent(SelectAssetsLabel)
                 .addContainerGap(976, Short.MAX_VALUE))
         );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+        AssetSelectionPanelLayout.setVerticalGroup(
+            AssetSelectionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AssetSelectionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel100, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                .addComponent(SelectAssetsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
-                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(AssetList, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane2.addTab("tab1", jPanel13);
+        jTabbedPane2.addTab("tab1", AssetSelectionPanel);
 
-        jLabel35.setText("Select Threats: ");
+        SelectThreatLabel.setText("Select Threats: ");
 
-        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
-        jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
+        javax.swing.GroupLayout ThreatSelecitonPanelLayout = new javax.swing.GroupLayout(ThreatSelecitonPanel);
+        ThreatSelecitonPanel.setLayout(ThreatSelecitonPanelLayout);
+        ThreatSelecitonPanelLayout.setHorizontalGroup(
+            ThreatSelecitonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ThreatSelecitonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel35, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(SelectThreatLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel20Layout.createSequentialGroup()
-                .addComponent(list2, javax.swing.GroupLayout.PREFERRED_SIZE, 1302, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ThreatSelecitonPanelLayout.createSequentialGroup()
+                .addComponent(ThreatList, javax.swing.GroupLayout.PREFERRED_SIZE, 1302, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel20Layout.createSequentialGroup()
+        ThreatSelecitonPanelLayout.setVerticalGroup(
+            ThreatSelecitonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ThreatSelecitonPanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SelectThreatLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(12, 12, 12)
-                .addComponent(list2, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ThreatList, javax.swing.GroupLayout.PREFERRED_SIZE, 570, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane2.addTab("tab2", jPanel20);
+        jTabbedPane2.addTab("tab2", ThreatSelecitonPanel);
 
-        jLabel38.setFont(new java.awt.Font("Segoe UI Historic", 0, 18)); // NOI18N
-        jLabel38.setText("Risk Rating Calculator");
+        RiskRatingText.setFont(new java.awt.Font("Segoe UI Historic", 0, 18)); // NOI18N
+        RiskRatingText.setText("Risk Rating Calculator");
 
-        jLabel39.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel39.setText("Vulnerability Identificaiton:");
+        VulnerabilityText.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        VulnerabilityText.setText("Vulnerability Identificaiton:");
 
-        jLabel40.setText("Attack Vector:");
+        AttackVectorText.setText("Attack Vector:");
 
-        jLabel41.setText("Attack Complexity:");
+        AttackComplexityText.setText("Attack Complexity:");
 
-        jLabel42.setText("Privileges Required:");
+        PrivilegesText.setText("Privileges Required:");
 
-        jLabel43.setText("Scope:");
+        ScopeText.setText("Scope:");
 
         attackVectorBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
-        jLabel44.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel44.setText("CIA Impact Factors:");
+        CIAText.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        CIAText.setText("CIA Impact Factors:");
 
-        jLabel46.setText("Loss of Confidentiality:");
+        ConfidentialityText.setText("Loss of Confidentiality:");
 
-        jLabel47.setText("Loss of Integrity:");
+        IntegrityText.setText("Loss of Integrity:");
 
-        jLabel52.setText("Loss of Availability:");
+        AvailabilityText.setText("Loss of Availability:");
 
-        jLabel53.setText("Loss of Traceability:");
+        TraceabilityText.setText("Loss of Traceability:");
 
         confidentialityBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
         jPanel21.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jLabel56.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel56.setText("Consequences:");
-        jLabel56.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        ConsequencesText.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ConsequencesText.setText("Consequences:");
+        ConsequencesText.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        jLabel57.setText("Financial Damage:");
+        FinancialDamageText.setText("Financial Damage:");
 
         financialBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
-        jLabel60.setText("Reputation Damage:");
+        ReputationText.setText("Reputation Damage:");
 
-        jLabel61.setText("Non-Compliance:");
+        NonComplianceRiskText.setText("Non-Compliance:");
 
-        jLabel62.setText("Disruption of Service:");
+        DisruptionOfServiceText.setText("Disruption of Service:");
 
         reputationBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
@@ -1302,37 +1298,37 @@ private static ArrayList<String> status=new ArrayList<>();
         jPanel21.setLayout(jPanel21Layout);
         jPanel21Layout.setHorizontalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel56, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ConsequencesText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel57)
+                    .addComponent(FinancialDamageText)
                     .addComponent(financialBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(98, 98, 98)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel60)
+                    .addComponent(ReputationText)
                     .addComponent(reputationBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(100, 100, 100)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel61)
+                    .addComponent(NonComplianceRiskText)
                     .addComponent(nonComplianceBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(96, 96, 96)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(disruptionBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel62))
+                    .addComponent(DisruptionOfServiceText))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel21Layout.setVerticalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ConsequencesText, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel57)
-                    .addComponent(jLabel60)
-                    .addComponent(jLabel61)
-                    .addComponent(jLabel62))
+                    .addComponent(FinancialDamageText)
+                    .addComponent(ReputationText)
+                    .addComponent(NonComplianceRiskText)
+                    .addComponent(DisruptionOfServiceText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(financialBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1363,59 +1359,54 @@ private static ArrayList<String> status=new ArrayList<>();
                     .addGroup(calcRiskPanelLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(VulnerabilityText, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(attackVectorBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(calcRiskPanelLayout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addComponent(jLabel45))
+                            .addComponent(CIAText, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(calcRiskPanelLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(calcRiskPanelLayout.createSequentialGroup()
                                         .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel46)
-                                            .addComponent(jLabel40)
+                                            .addComponent(ConfidentialityText)
+                                            .addComponent(AttackVectorText)
                                             .addComponent(confidentialityBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(100, 100, 100)
                                         .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel41)
-                                            .addComponent(jLabel47)
+                                            .addComponent(AttackComplexityText)
+                                            .addComponent(IntegrityText)
                                             .addComponent(attackComplexityBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(integrityBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(100, 100, 100)
                                         .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel42)
-                                            .addComponent(jLabel52)
+                                            .addComponent(PrivilegesText)
+                                            .addComponent(AvailabilityText)
                                             .addComponent(privilegesRequiredBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(availabilityBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(100, 100, 100)
                                         .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(tracabilityBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(scopeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel53)))
-                                        .addGap(152, 152, 152))
+                                            .addComponent(ScopeText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(scopeBox, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TraceabilityText)))
                                     .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(calcRiskPanelLayout.createSequentialGroup()
                         .addGap(494, 494, 494)
-                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(RiskRatingText, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(281, 281, Short.MAX_VALUE))
         );
         calcRiskPanelLayout.setVerticalGroup(
             calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(calcRiskPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RiskRatingText, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
-                .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(VulnerabilityText, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel40)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel42)
-                    .addComponent(jLabel43))
+                    .addComponent(AttackVectorText)
+                    .addComponent(AttackComplexityText)
+                    .addComponent(PrivilegesText)
+                    .addComponent(ScopeText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(attackVectorBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1423,16 +1414,14 @@ private static ArrayList<String> status=new ArrayList<>();
                     .addComponent(privilegesRequiredBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scopeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37)
-                .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CIAText, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel46)
-                    .addComponent(jLabel47)
-                    .addComponent(jLabel52)
-                    .addComponent(jLabel53))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel45)
-                .addGap(12, 12, 12)
+                    .addComponent(ConfidentialityText)
+                    .addComponent(IntegrityText)
+                    .addComponent(AvailabilityText)
+                    .addComponent(TraceabilityText))
+                .addGap(18, 18, 18)
                 .addGroup(calcRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(confidentialityBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(integrityBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1445,170 +1434,170 @@ private static ArrayList<String> status=new ArrayList<>();
 
         jTabbedPane2.addTab("tab3", calcRiskPanel);
 
-        jPanel39.setBackground(new java.awt.Color(255, 102, 0));
+        RightMediumPanel.setBackground(new java.awt.Color(255, 102, 0));
 
-        jLabel85.setText("Medium - 4");
+        Medium4.setText("Medium - 4");
 
-        javax.swing.GroupLayout jPanel39Layout = new javax.swing.GroupLayout(jPanel39);
-        jPanel39.setLayout(jPanel39Layout);
-        jPanel39Layout.setHorizontalGroup(
-            jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel39Layout.createSequentialGroup()
+        javax.swing.GroupLayout RightMediumPanelLayout = new javax.swing.GroupLayout(RightMediumPanel);
+        RightMediumPanel.setLayout(RightMediumPanelLayout);
+        RightMediumPanelLayout.setHorizontalGroup(
+            RightMediumPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RightMediumPanelLayout.createSequentialGroup()
                 .addGap(74, 74, 74)
-                .addComponent(jLabel85, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Medium4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(53, Short.MAX_VALUE))
         );
-        jPanel39Layout.setVerticalGroup(
-            jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel39Layout.createSequentialGroup()
+        RightMediumPanelLayout.setVerticalGroup(
+            RightMediumPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RightMediumPanelLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jLabel85)
+                .addComponent(Medium4)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jPanel40.setBackground(new java.awt.Color(255, 255, 0));
+        LowPanel.setBackground(new java.awt.Color(255, 255, 0));
 
-        jLabel84.setText("Low - 2");
+        Low2Text.setText("Low - 2");
 
-        javax.swing.GroupLayout jPanel40Layout = new javax.swing.GroupLayout(jPanel40);
-        jPanel40.setLayout(jPanel40Layout);
-        jPanel40Layout.setHorizontalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel40Layout.createSequentialGroup()
+        javax.swing.GroupLayout LowPanelLayout = new javax.swing.GroupLayout(LowPanel);
+        LowPanel.setLayout(LowPanelLayout);
+        LowPanelLayout.setHorizontalGroup(
+            LowPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LowPanelLayout.createSequentialGroup()
                 .addGap(85, 85, 85)
-                .addComponent(jLabel84, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Low2Text, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(64, Short.MAX_VALUE))
         );
-        jPanel40Layout.setVerticalGroup(
-            jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
+        LowPanelLayout.setVerticalGroup(
+            LowPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LowPanelLayout.createSequentialGroup()
                 .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(jLabel84)
+                .addComponent(Low2Text)
                 .addGap(26, 26, 26))
         );
 
-        jPanel43.setBackground(new java.awt.Color(255, 102, 0));
+        MiddleMediumpanel.setBackground(new java.awt.Color(255, 102, 0));
 
-        jLabel87.setText("Medium - 5");
+        Medium5Text.setText("Medium - 5");
 
-        javax.swing.GroupLayout jPanel43Layout = new javax.swing.GroupLayout(jPanel43);
-        jPanel43.setLayout(jPanel43Layout);
-        jPanel43Layout.setHorizontalGroup(
-            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel43Layout.createSequentialGroup()
+        javax.swing.GroupLayout MiddleMediumpanelLayout = new javax.swing.GroupLayout(MiddleMediumpanel);
+        MiddleMediumpanel.setLayout(MiddleMediumpanelLayout);
+        MiddleMediumpanelLayout.setHorizontalGroup(
+            MiddleMediumpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MiddleMediumpanelLayout.createSequentialGroup()
                 .addGap(76, 76, 76)
-                .addComponent(jLabel87, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Medium5Text, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(53, Short.MAX_VALUE))
         );
-        jPanel43Layout.setVerticalGroup(
-            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel43Layout.createSequentialGroup()
+        MiddleMediumpanelLayout.setVerticalGroup(
+            MiddleMediumpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(MiddleMediumpanelLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jLabel87)
+                .addComponent(Medium5Text)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jPanel44.setBackground(new java.awt.Color(255, 0, 0));
+        TopHighPanel.setBackground(new java.awt.Color(255, 0, 0));
 
-        jLabel89.setText("High - 7");
+        High7Text.setText("High - 7");
 
-        javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
-        jPanel44.setLayout(jPanel44Layout);
-        jPanel44Layout.setHorizontalGroup(
-            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel44Layout.createSequentialGroup()
+        javax.swing.GroupLayout TopHighPanelLayout = new javax.swing.GroupLayout(TopHighPanel);
+        TopHighPanel.setLayout(TopHighPanelLayout);
+        TopHighPanelLayout.setHorizontalGroup(
+            TopHighPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopHighPanelLayout.createSequentialGroup()
                 .addContainerGap(88, Short.MAX_VALUE)
-                .addComponent(jLabel89, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(High7Text, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54))
         );
-        jPanel44Layout.setVerticalGroup(
-            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel44Layout.createSequentialGroup()
+        TopHighPanelLayout.setVerticalGroup(
+            TopHighPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopHighPanelLayout.createSequentialGroup()
                 .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(jLabel89)
+                .addComponent(High7Text)
                 .addGap(26, 26, 26))
         );
 
-        jPanel45.setBackground(new java.awt.Color(153, 0, 0));
+        CriticalPanel.setBackground(new java.awt.Color(153, 0, 0));
 
-        jLabel91.setText("Critical - 9+");
+        CriticalText.setText("Critical - 9+");
 
-        javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
-        jPanel45.setLayout(jPanel45Layout);
-        jPanel45Layout.setHorizontalGroup(
-            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel45Layout.createSequentialGroup()
+        javax.swing.GroupLayout CriticalPanelLayout = new javax.swing.GroupLayout(CriticalPanel);
+        CriticalPanel.setLayout(CriticalPanelLayout);
+        CriticalPanelLayout.setHorizontalGroup(
+            CriticalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CriticalPanelLayout.createSequentialGroup()
                 .addContainerGap(82, Short.MAX_VALUE)
-                .addComponent(jLabel91, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CriticalText, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41))
         );
-        jPanel45Layout.setVerticalGroup(
-            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel45Layout.createSequentialGroup()
+        CriticalPanelLayout.setVerticalGroup(
+            CriticalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CriticalPanelLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jLabel91)
+                .addComponent(CriticalText)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jPanel46.setBackground(new java.awt.Color(255, 0, 0));
+        RightHighPanel.setBackground(new java.awt.Color(255, 0, 0));
 
-        jLabel90.setText("High - 8");
+        High8Text.setText("High - 8");
 
-        javax.swing.GroupLayout jPanel46Layout = new javax.swing.GroupLayout(jPanel46);
-        jPanel46.setLayout(jPanel46Layout);
-        jPanel46Layout.setHorizontalGroup(
-            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel46Layout.createSequentialGroup()
+        javax.swing.GroupLayout RightHighPanelLayout = new javax.swing.GroupLayout(RightHighPanel);
+        RightHighPanel.setLayout(RightHighPanelLayout);
+        RightHighPanelLayout.setHorizontalGroup(
+            RightHighPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RightHighPanelLayout.createSequentialGroup()
                 .addContainerGap(87, Short.MAX_VALUE)
-                .addComponent(jLabel90, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(High8Text, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
-        jPanel46Layout.setVerticalGroup(
-            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel46Layout.createSequentialGroup()
+        RightHighPanelLayout.setVerticalGroup(
+            RightHighPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(RightHighPanelLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jLabel90)
+                .addComponent(High8Text)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jPanel47.setBackground(new java.awt.Color(255, 102, 0));
+        leftMediumPanel.setBackground(new java.awt.Color(255, 102, 0));
 
         jLabel88.setText("Medium - 6");
 
-        javax.swing.GroupLayout jPanel47Layout = new javax.swing.GroupLayout(jPanel47);
-        jPanel47.setLayout(jPanel47Layout);
-        jPanel47Layout.setHorizontalGroup(
-            jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
+        javax.swing.GroupLayout leftMediumPanelLayout = new javax.swing.GroupLayout(leftMediumPanel);
+        leftMediumPanel.setLayout(leftMediumPanelLayout);
+        leftMediumPanelLayout.setHorizontalGroup(
+            leftMediumPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, leftMediumPanelLayout.createSequentialGroup()
                 .addContainerGap(81, Short.MAX_VALUE)
                 .addComponent(jLabel88, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
         );
-        jPanel47Layout.setVerticalGroup(
-            jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel47Layout.createSequentialGroup()
+        leftMediumPanelLayout.setVerticalGroup(
+            leftMediumPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(leftMediumPanelLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel88)
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jLabel75.setText("High");
+        LikelihoodHighText.setText("High");
 
-        jLabel76.setText("Low");
+        LikelihoodLowText.setText("Low");
 
-        jLabel77.setText("Medium");
+        LikelihoodMediumText.setText("Medium");
 
-        jLabel78.setText("Low");
+        ImpactLowText.setText("Low");
 
-        jLabel79.setText("Medium");
+        ImpactMediumText.setText("Medium");
 
-        jLabel80.setText("High");
+        ImpactHighText.setText("High");
 
-        jLabel81.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel81.setText("Impact");
+        MainImpactText.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        MainImpactText.setText("Impact");
 
-        jLabel82.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel82.setText("Likelihood");
+        MainLikelihoodText.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        MainLikelihoodText.setText("Likelihood");
 
         jPanel48.setBackground(new java.awt.Color(51, 255, 0));
 
@@ -1680,142 +1669,142 @@ private static ArrayList<String> status=new ArrayList<>();
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+        javax.swing.GroupLayout SavePanelLayout = new javax.swing.GroupLayout(SavePanel);
+        SavePanel.setLayout(SavePanelLayout);
+        SavePanelLayout.setHorizontalGroup(
+            SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SavePanelLayout.createSequentialGroup()
+                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SavePanelLayout.createSequentialGroup()
+                        .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addGap(52, 52, 52)
-                                .addComponent(jLabel81, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(MainImpactText, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel78)
-                                    .addComponent(jLabel79, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ImpactLowText)
+                                    .addComponent(ImpactMediumText, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel80, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(ImpactHighText, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel49, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addComponent(jPanel40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(leftMediumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(SavePanelLayout.createSequentialGroup()
+                                .addComponent(LowPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(MiddleMediumpanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel46, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addComponent(jPanel39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(RightHighPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(SavePanelLayout.createSequentialGroup()
+                                .addComponent(RightMediumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel44, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(TopHighPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addComponent(CriticalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(SavePanelLayout.createSequentialGroup()
                         .addGap(503, 503, 503)
-                        .addComponent(jLabel82, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(MainLikelihoodText, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
+            .addGroup(SavePanelLayout.createSequentialGroup()
+                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SavePanelLayout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addComponent(jPanel41, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel15Layout.createSequentialGroup()
+                    .addGroup(SavePanelLayout.createSequentialGroup()
                         .addGap(402, 402, 402)
-                        .addComponent(jLabel76, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(LikelihoodLowText, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(155, 155, 155)
-                        .addComponent(jLabel77, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(LikelihoodMediumText, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(176, 176, 176)
-                        .addComponent(jLabel75, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(LikelihoodHighText, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
+        SavePanelLayout.setVerticalGroup(
+            SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SavePanelLayout.createSequentialGroup()
                 .addGap(103, 103, 103)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel44, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(SavePanelLayout.createSequentialGroup()
+                        .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(RightMediumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TopHighPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CriticalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addComponent(jLabel80, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(SavePanelLayout.createSequentialGroup()
+                        .addComponent(ImpactHighText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)))
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel46, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SavePanelLayout.createSequentialGroup()
+                        .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(LowPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(RightHighPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel79, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel81, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+                                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ImpactMediumText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(MainImpactText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(leftMediumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jPanel49, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel15Layout.createSequentialGroup()
+                            .addGroup(SavePanelLayout.createSequentialGroup()
                                 .addGap(19, 19, 19)
-                                .addComponent(jLabel78, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ImpactLowText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(MiddleMediumpanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel75, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel76, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel77, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(SavePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LikelihoodHighText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LikelihoodLowText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LikelihoodMediumText, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel82, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(MainLikelihoodText, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel41, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(75, Short.MAX_VALUE))
         );
 
-        jTabbedPane2.addTab("tab8", jPanel15);
+        jTabbedPane2.addTab("tab8", SavePanel);
 
-        jPanel17.setBackground(new java.awt.Color(44, 195, 112));
-        jPanel17.setPreferredSize(new java.awt.Dimension(245, 64));
-        jPanel17.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        SelectThreatPanel.setBackground(new java.awt.Color(44, 195, 112));
+        SelectThreatPanel.setPreferredSize(new java.awt.Dimension(245, 64));
+        SelectThreatPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel63.setText("Select Threats");
-        jPanel17.add(jLabel63, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
+        SelectThreatText.setText("Select Threats");
+        SelectThreatPanel.add(SelectThreatText, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
 
-        jPanel18.setBackground(new java.awt.Color(44, 195, 112));
-        jPanel18.setPreferredSize(new java.awt.Dimension(245, 64));
-        jPanel18.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        TopRiskAssessmentPanel.setBackground(new java.awt.Color(44, 195, 112));
+        TopRiskAssessmentPanel.setPreferredSize(new java.awt.Dimension(245, 64));
+        TopRiskAssessmentPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel64.setText("Risk Assessment");
-        jPanel18.add(jLabel64, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
+        RiskAssessmentPanel.setText("Risk Assessment");
+        TopRiskAssessmentPanel.add(RiskAssessmentPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
 
-        jPanel10.setBackground(new java.awt.Color(44, 195, 112));
-        jPanel10.setPreferredSize(new java.awt.Dimension(245, 64));
-        jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        SaveTextPanel.setBackground(new java.awt.Color(44, 195, 112));
+        SaveTextPanel.setPreferredSize(new java.awt.Dimension(245, 64));
+        SaveTextPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel58.setText("Save");
-        jPanel10.add(jLabel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, -1, -1));
+        SaveTextLabel.setText("Save");
+        SaveTextPanel.add(SaveTextLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, -1, -1));
 
-        jButton2.setText("Back");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        BackBtn.setText("Back");
+        BackBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                BackBtnMouseClicked(evt);
             }
         });
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        BackBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                BackBtnActionPerformed(evt);
             }
         });
 
@@ -1839,21 +1828,21 @@ private static ArrayList<String> status=new ArrayList<>();
                 .addContainerGap()
                 .addGroup(riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(riskCalcTabLayout.createSequentialGroup()
-                        .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SummaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(riskCalcTabLayout.createSequentialGroup()
-                                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SelectAssetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(20, 20, 20)
-                                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(SelectThreatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28)
-                                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(TopRiskAssessmentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27)
-                                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(SaveTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addGroup(riskCalcTabLayout.createSequentialGroup()
                         .addGap(0, 1110, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(BackBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(310, Short.MAX_VALUE))
@@ -1862,151 +1851,119 @@ private static ArrayList<String> status=new ArrayList<>();
             riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(riskCalcTabLayout.createSequentialGroup()
                 .addGroup(riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel18, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(TopRiskAssessmentPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(SelectThreatPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(SelectAssetPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(SaveTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SummaryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 18, Short.MAX_VALUE)
                 .addGroup(riskCalcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BackBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(243, 243, 243))
         );
 
-        jTabbedPane1.addTab("tab4", riskCalcTab);
+        Tab_tabbedPane.addTab("tab4", riskCalcTab);
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        HomePageAssetPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel5.setText("Assets:");
+        Asset_HomepageLable.setText("Assets:");
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel9.setText("23");
+        AssetHomepage_Text.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        AssetHomepage_Text.setText("23");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout HomePageAssetPanelLayout = new javax.swing.GroupLayout(HomePageAssetPanel);
+        HomePageAssetPanel.setLayout(HomePageAssetPanelLayout);
+        HomePageAssetPanelLayout.setHorizontalGroup(
+            HomePageAssetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageAssetPanelLayout.createSequentialGroup()
+                .addGroup(HomePageAssetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(HomePageAssetPanelLayout.createSequentialGroup()
                         .addGap(96, 96, 96)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(AssetHomepage_Text, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(HomePageAssetPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel5)))
+                        .addComponent(Asset_HomepageLable)))
                 .addContainerGap(105, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        HomePageAssetPanelLayout.setVerticalGroup(
+            HomePageAssetPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageAssetPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(jLabel5)
+                .addComponent(Asset_HomepageLable)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(AssetHomepage_Text, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(23, 23, 23))
         );
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setPreferredSize(new java.awt.Dimension(248, 82));
+        HomePageRiskPanel.setBackground(new java.awt.Color(255, 255, 255));
+        HomePageRiskPanel.setPreferredSize(new java.awt.Dimension(248, 82));
 
         jLabel10.setText("Risks Calcualted:");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel11.setText("13");
+        RiskCalc_Homepage.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        RiskCalc_Homepage.setText("13");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout HomePageRiskPanelLayout = new javax.swing.GroupLayout(HomePageRiskPanel);
+        HomePageRiskPanel.setLayout(HomePageRiskPanelLayout);
+        HomePageRiskPanelLayout.setHorizontalGroup(
+            HomePageRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageRiskPanelLayout.createSequentialGroup()
+                .addGroup(HomePageRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(HomePageRiskPanelLayout.createSequentialGroup()
                         .addGap(96, 96, 96)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(RiskCalc_Homepage, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(HomePageRiskPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(105, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        HomePageRiskPanelLayout.setVerticalGroup(
+            HomePageRiskPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageRiskPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(RiskCalc_Homepage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(23, 23, 23))
         );
 
-        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel7.setPreferredSize(new java.awt.Dimension(248, 82));
+        HomePageThreatPanel.setBackground(new java.awt.Color(255, 255, 255));
+        HomePageThreatPanel.setPreferredSize(new java.awt.Dimension(248, 82));
 
-        jLabel19.setText("Vulnerabilitys:");
+        Vulnerabilitys_HomepageLabel.setText("Threats:");
 
-        jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel22.setText("13");
+        Vuln_homepageLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        Vuln_homepageLabel.setText("13");
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout HomePageThreatPanelLayout = new javax.swing.GroupLayout(HomePageThreatPanel);
+        HomePageThreatPanel.setLayout(HomePageThreatPanelLayout);
+        HomePageThreatPanelLayout.setHorizontalGroup(
+            HomePageThreatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageThreatPanelLayout.createSequentialGroup()
+                .addGroup(HomePageThreatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(HomePageThreatPanelLayout.createSequentialGroup()
                         .addGap(96, 96, 96)
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(Vuln_homepageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(HomePageThreatPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel19)))
+                        .addComponent(Vulnerabilitys_HomepageLabel)))
                 .addContainerGap(105, Short.MAX_VALUE))
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        HomePageThreatPanelLayout.setVerticalGroup(
+            HomePageThreatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomePageThreatPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(jLabel19)
+                .addComponent(Vulnerabilitys_HomepageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Vuln_homepageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(23, 23, 23))
         );
 
-        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel8.setPreferredSize(new java.awt.Dimension(248, 82));
-
-        jLabel23.setText("Remaining Assets for Risk assessmet:");
-
-        jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel24.setText("10");
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel23)))
-                .addContainerGap(48, Short.MAX_VALUE))
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel23)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(23, 23, 23))
-        );
-
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        HomepageTable.setBackground(new java.awt.Color(255, 255, 255));
 
         homePageTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -2018,61 +1975,58 @@ private static ArrayList<String> status=new ArrayList<>();
         ));
         jScrollPane10.setViewportView(homePageTable);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout HomepageTableLayout = new javax.swing.GroupLayout(HomepageTable);
+        HomepageTable.setLayout(HomepageTableLayout);
+        HomepageTableLayout.setHorizontalGroup(
+            HomepageTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomepageTableLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        HomepageTableLayout.setVerticalGroup(
+            HomepageTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomepageTableLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout HomepageLayout = new javax.swing.GroupLayout(Homepage);
+        Homepage.setLayout(HomepageLayout);
+        HomepageLayout.setHorizontalGroup(
+            HomepageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomepageLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(HomepageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(HomepageTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(HomepageLayout.createSequentialGroup()
+                        .addComponent(HomePageAssetPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(HomePageThreatPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(598, Short.MAX_VALUE))
+                        .addComponent(HomePageRiskPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(882, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        HomepageLayout.setVerticalGroup(
+            HomepageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HomepageLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(HomepageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(HomePageRiskPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(HomePageAssetPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(HomePageThreatPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(HomepageTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(257, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab4", jPanel2);
+        Tab_tabbedPane.addTab("tab4", Homepage);
 
-        jLabel103.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel103.setText("Threat Management:");
+        ThreatManagementText.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        ThreatManagementText.setText("Threat Management:");
 
-        jPanel52.setBackground(new java.awt.Color(255, 255, 255));
+        ThreatTableBackground.setBackground(new java.awt.Color(255, 255, 255));
 
         threat_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -2098,65 +2052,75 @@ private static ArrayList<String> status=new ArrayList<>();
             threat_table.getColumnModel().getColumn(0).setMaxWidth(30);
         }
 
-        jTextPane5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jTextPane5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jScrollPane9.setViewportView(jTextPane5);
+        Showing_threats.setText("Showing: 42 Threats");
 
-        jLabel8.setText("Search:");
-
-        jButton9.setText("Go");
-
-        jLabel49.setText("Showing: 42 Assets");
-
-        jButton10.setText("Create_New");
-        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
+        CreateNewThreat.setText("Create_New");
+        CreateNewThreat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton10MouseClicked(evt);
+                CreateNewThreatMouseClicked(evt);
             }
         });
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        CreateNewThreat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                CreateNewThreatActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel52Layout = new javax.swing.GroupLayout(jPanel52);
-        jPanel52.setLayout(jPanel52Layout);
-        jPanel52Layout.setHorizontalGroup(
-            jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel52Layout.createSequentialGroup()
+        update_Threats.setText("Update");
+        update_Threats.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                update_ThreatsMouseClicked(evt);
+            }
+        });
+        update_Threats.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                update_ThreatsActionPerformed(evt);
+            }
+        });
+
+        Threat_Delete.setText("Delete");
+        Threat_Delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Threat_DeleteMouseClicked(evt);
+            }
+        });
+        Threat_Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Threat_DeleteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout ThreatTableBackgroundLayout = new javax.swing.GroupLayout(ThreatTableBackground);
+        ThreatTableBackground.setLayout(ThreatTableBackgroundLayout);
+        ThreatTableBackgroundLayout.setHorizontalGroup(
+            ThreatTableBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ThreatTableBackgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Showing_threats, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Threat_Delete, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33))
-            .addGroup(jPanel52Layout.createSequentialGroup()
+                .addComponent(update_Threats, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(CreateNewThreat, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+            .addGroup(ThreatTableBackgroundLayout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel52Layout.setVerticalGroup(
-            jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel52Layout.createSequentialGroup()
+        ThreatTableBackgroundLayout.setVerticalGroup(
+            ThreatTableBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ThreatTableBackgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel52Layout.createSequentialGroup()
-                        .addGroup(jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel52Layout.createSequentialGroup()
+                .addGroup(ThreatTableBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ThreatTableBackgroundLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)))
+                        .addGroup(ThreatTableBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Showing_threats, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CreateNewThreat, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(update_Threats, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(Threat_Delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -2167,64 +2131,130 @@ private static ArrayList<String> status=new ArrayList<>();
             .addGroup(ThreatJPanelLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(ThreatJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel52, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel103, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ThreatTableBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 1407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ThreatManagementText, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(290, Short.MAX_VALUE))
         );
         ThreatJPanelLayout.setVerticalGroup(
             ThreatJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ThreatJPanelLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel103, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ThreatManagementText, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
-                .addComponent(jPanel52, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ThreatTableBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(358, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab5", ThreatJPanel);
+        Tab_tabbedPane.addTab("tab5", ThreatJPanel);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 1720, 1050));
+        HelpBackground.setBackground(new java.awt.Color(255, 255, 255));
+
+        AssetManagementHelpText.setText("Asset Management Tab: This tab allows you to manage the assets in the system. You can add, edit, and delete assets and view their details.");
+
+        ThreatManagmentHelpText.setText("Threat Management Tab: This tab allows you to manage the threats in the system. You can add, edit, and delete threats and view their details. ");
+
+        RiskScoreManagmentHelpText.setText("Risk Score Tab: This tab allows you to calculate the risk scores for each asset based on the likelihood and impact of the threats. You can view the risk scores for each asset in a table format.");
+
+        RiskScoreHelpText.setText("To calculate the risk scores, select the assets and threats from the respective tables, input the metrics that are displayed on  tab and click on the “Next” button, and the risk scores will be displayed in the “Risk Scores” table.");
+
+        AuditHelpText.setText("To output the audit , click on the “Audit” tab which will allow you to export the file.");
+
+        IntroductionHelpText.setText("Introduction: This guide provides information on how to use the tool effectively and efficiently. The guide covers all the key features and functionalities of the tool.");
+
+        javax.swing.GroupLayout HelpBackgroundLayout = new javax.swing.GroupLayout(HelpBackground);
+        HelpBackground.setLayout(HelpBackgroundLayout);
+        HelpBackgroundLayout.setHorizontalGroup(
+            HelpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpBackgroundLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(HelpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(IntroductionHelpText, javax.swing.GroupLayout.PREFERRED_SIZE, 924, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AssetManagementHelpText)
+                    .addComponent(ThreatManagmentHelpText)
+                    .addComponent(RiskScoreManagmentHelpText)
+                    .addComponent(AuditHelpText, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RiskScoreHelpText, javax.swing.GroupLayout.PREFERRED_SIZE, 1263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(820, Short.MAX_VALUE))
+        );
+        HelpBackgroundLayout.setVerticalGroup(
+            HelpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpBackgroundLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(IntroductionHelpText)
+                .addGap(47, 47, 47)
+                .addComponent(AssetManagementHelpText)
+                .addGap(37, 37, 37)
+                .addComponent(ThreatManagmentHelpText)
+                .addGap(46, 46, 46)
+                .addComponent(RiskScoreManagmentHelpText)
+                .addGap(88, 88, 88)
+                .addComponent(RiskScoreHelpText)
+                .addGap(46, 46, 46)
+                .addComponent(AuditHelpText)
+                .addContainerGap(214, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout HelpLayout = new javax.swing.GroupLayout(Help);
+        Help.setLayout(HelpLayout);
+        HelpLayout.setHorizontalGroup(
+            HelpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(HelpBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        HelpLayout.setVerticalGroup(
+            HelpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(HelpLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(HelpBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(349, Short.MAX_VALUE))
+        );
+
+        Tab_tabbedPane.addTab("tab3", Help);
+
+        getContentPane().add(Tab_tabbedPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 30, 1720, 1050));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     //Hover effect
-    private void OneMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OneMouseEntered
-        One.setBackground(Color.white);
-    }//GEN-LAST:event_OneMouseEntered
+    private void DashboardPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DashboardPanelMouseEntered
+  //     One.setBackground(Color.white);
+    }//GEN-LAST:event_DashboardPanelMouseEntered
 
-    private void OneMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OneMouseExited
-        One.setBackground(new Color(44,195,112));
-    }//GEN-LAST:event_OneMouseExited
+    private void DashboardPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DashboardPanelMouseExited
+  //      One.setBackground(new Color(44,195,112));
+    }//GEN-LAST:event_DashboardPanelMouseExited
 
-    private void TwoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TwoMouseEntered
-        Two.setBackground(Color.white);
-    }//GEN-LAST:event_TwoMouseEntered
+    private void ManagementPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ManagementPanelMouseEntered
+       //Two.setBackground(Color.white);
+    }//GEN-LAST:event_ManagementPanelMouseEntered
 
-    private void TwoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TwoMouseExited
-        Two.setBackground(new Color(44,195,112));
-    }//GEN-LAST:event_TwoMouseExited
+    private void ManagementPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ManagementPanelMouseExited
+      //  Two.setBackground(new Color(44,195,112));
+    }//GEN-LAST:event_ManagementPanelMouseExited
 
-    private void Two1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Two1MouseEntered
+    private void FeaturesPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FeaturesPanelMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_Two1MouseEntered
+    }//GEN-LAST:event_FeaturesPanelMouseEntered
 
-    private void Two1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Two1MouseExited
+    private void FeaturesPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FeaturesPanelMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_Two1MouseExited
+    }//GEN-LAST:event_FeaturesPanelMouseExited
 
-    private void FourMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FourMouseClicked
-        jTabbedPane1.setSelectedIndex(3);
-    }//GEN-LAST:event_FourMouseClicked
+    private void ThreatPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ThreatPanelMouseClicked
+        Tab_tabbedPane.setSelectedIndex(4);
+    }//GEN-LAST:event_ThreatPanelMouseClicked
 
     private int conseq = 0;
     private int threat = 0;
     private int likely = 0;
     
-    private void Three3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Three3MouseClicked
-        jTabbedPane1.setSelectedIndex(2);
-    }//GEN-LAST:event_Three3MouseClicked
+    private void RiskCalcPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RiskCalcPanelMouseClicked
+        Tab_tabbedPane.setSelectedIndex(2);
+    }//GEN-LAST:event_RiskCalcPanelMouseClicked
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
         // TODO add your handling code here:
@@ -2234,95 +2264,124 @@ private static ArrayList<String> status=new ArrayList<>();
     String selected;
     String assetsSelected;
     String vuln;
+    
+    /**
+ * Handles mouse clicks on the "Next" button.
+ * This method controls the flow of the GUI and updates the "Summary" panel with user selections.
+ * If the user reaches the final panel, this method saves the user's selections to a MySQL database.
+ */
     private void NextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_NextMouseClicked
 
 if (jTabbedPane2.getSelectedIndex() == 0) {
-    String[] selecteditems = list1.getSelectedItems();
+// If the first tab is selected
+    // Get selected items from AssetList and format them into a string
+    String[] selecteditems = AssetList.getSelectedItems();
     StringBuilder sb = new StringBuilder();
     for (String items: selecteditems){
-     sb.append(items).append(", ");
+        sb.append(items).append(", ");
         assetsSelected = sb.toString();
     }
-    jLabel30.setText("Asset: ");
-    AssetTextOut.setText(assetsSelected);
-    
+    // Set summary text and move to the next tab
+    SummaryAssetText.setText("Asset: ");
+    SummarySelectedAssetText.setText(assetsSelected);
     jTabbedPane2.setSelectedIndex(1);
-} else if (jTabbedPane2.getSelectedIndex() == 1) {
-    jLabel36.setText("Threats");
-    vuln = list2.getSelectedItem();
-    jLabel37.setText(vuln);
+} 
+// If the second tab is selected
+else if (jTabbedPane2.getSelectedIndex() == 1) {
+    // Get selected threat and set summary text, then move to the next tab
+    String[] selecteditems = ThreatList.getSelectedItems();
+    SummaryThreatText.setText("Threats");
+    vuln = ThreatList.getSelectedItem();
+    SummaryThreatSelectionText.setText(vuln);
     jTabbedPane2.setSelectedIndex(2);
-    
-    
-    
-} else if (jTabbedPane2.getSelectedIndex() == 2) {
+} 
+// If the third tab is selected
+else if (jTabbedPane2.getSelectedIndex() == 2) {
+    // Calculate vulnerability, CIA impact, and consequences values
     int vulnerabilityID = (attackVectorBox.getSelectedIndex() + attackComplexityBox.getSelectedIndex() + privilegesRequiredBox.getSelectedIndex() + scopeBox.getSelectedIndex());
     int CIAimpact = (confidentialityBox.getSelectedIndex() + integrityBox.getSelectedIndex() + availabilityBox.getSelectedIndex() + tracabilityBox.getSelectedIndex());
     int consequences = (financialBox.getSelectedIndex() + reputationBox.getSelectedIndex() + nonComplianceBox.getSelectedIndex() + disruptionBox.getSelectedIndex());
     
+    // Check if any of the options are not selected and print error messages
     if (attackVectorBox.getSelectedIndex() == 0 || attackComplexityBox.getSelectedIndex() == 0 || privilegesRequiredBox.getSelectedIndex() == 0 || scopeBox.getSelectedIndex() == 0) {
-        System.out.println("Vulnerbailty is 0");
+        System.out.println("Vulnerability is 0");
     } else if (confidentialityBox.getSelectedIndex() == 0 || integrityBox.getSelectedIndex() == 0 || availabilityBox.getSelectedIndex() == 0 || tracabilityBox.getSelectedIndex() == 0) {
         System.out.println("CIA is 0");
     } else if (financialBox.getSelectedIndex() == 0 || reputationBox.getSelectedIndex() == 0 || nonComplianceBox.getSelectedIndex() == 0 || disruptionBox.getSelectedIndex() == 0) {
         System.out.println("Consequences is 0");
     } else {
-       float Vuln = (float) vulnerabilityID / 4;
-    float CIA = (float) CIAimpact / 4;
-    float Cons = (float) consequences / 4;
-    double Likelihood = Vuln;
-    double Impact = (CIA + Cons) / 2;
-    String likelihoodOutput = "";
-    String ImpactOutput = "";
-    // likelihood checker 
-    if (Likelihood >= 0 && Likelihood < 3) {
-        likelihoodOutput = "Low";
-        System.out.println(likelihoodOutput);
-    } else if (Likelihood >= 3 && Likelihood <= 6) {
-        likelihoodOutput = "Medium";
-        System.out.println(likelihoodOutput);
-    } else if (Likelihood >= 6) {
-        likelihoodOutput = "High";
-        System.out.println(likelihoodOutput);
-    } else {
-        System.out.println("Likelihood checker error");
-    }
-    // impact checker
-    if (Impact < 3) {
-        ImpactOutput = "Low";
-        System.out.println(ImpactOutput);
-    } else if (Impact >= 3 && Likelihood <= 6) {
-        ImpactOutput = "Medium";
-        System.out.println(ImpactOutput);
-    } else if (Impact >= 6.0) {
-        ImpactOutput = "High";
-        System.out.println(ImpactOutput);
-    } else {
-        System.out.println("IMPACT checker");
-    }
-    jLabel96.setText("Risk Score");
+        // Calculate likelihood, impact, and risk score based on selected options
+        float Vuln = (float) vulnerabilityID / 4;
+        float CIA = (float) CIAimpact / 4;
+        float Cons = (float) consequences / 4;
+        double LikelihoodTotal = (Vuln);
+        double FinalImpact = (CIA + Cons) / 2;
+        System.out.println(LikelihoodTotal + "2123");
+        System.out.println(FinalImpact + "434");
+        
+        String likelihoodOutput = "";
+        String ImpactOutput = "";
+        
+ // likelihood checker
+if (LikelihoodTotal >= 0 && LikelihoodTotal < 3) {
+likelihoodOutput = "Low";
+System.out.println(likelihoodOutput);
+} else if (LikelihoodTotal >= 3 && LikelihoodTotal <= 6) {
+likelihoodOutput = "Medium";
+System.out.println(likelihoodOutput);
+} else if (LikelihoodTotal >= 6) {
+likelihoodOutput = "High";
+System.out.println(likelihoodOutput);
+} else {
+System.out.println("Likelihood checker error");
+}
+
+// impact checker
+if (FinalImpact < 3) {
+ImpactOutput = "Low";
+System.out.println(ImpactOutput);
+} else if (FinalImpact >= 3 && FinalImpact <= 6) {
+ImpactOutput = "Medium";
+System.out.println(ImpactOutput);
+} else if (FinalImpact >= 6.0) {
+ImpactOutput = "High";
+System.out.println(ImpactOutput);
+} else if (FinalImpact >= 9.0) {
+ImpactOutput = "Critical";
+System.out.println(ImpactOutput);
+} else {
+System.out.println("IMPACT checker error");
+}
+    
+    SummaryRiskScoreText.setText("Risk Score");
     likelihoodCalcuation = likelihoodOutput;
     impactCalcuation = ImpactOutput;
-    calculateRiskScore();
+   System.out.println(likelihoodCalcuation);
+     System.out.println(ImpactOutput);
     
-    LikelihoodTextOut.setText(likelihoodOutput);
-    ImpactTextOut.setText(ImpactOutput);
+    SummaryLikelihoodText.setText(likelihoodOutput);
+    SummaryImpactTextOut.setText(ImpactOutput);
     jTabbedPane2.setSelectedIndex(3);
-    riskScoreTextOut.setText("Risk Score: " + assignedValue);
+   int castedValue = (int)((LikelihoodTotal + FinalImpact) / 2);
+    riskScoreTextOut.setText("Risk Score: " + castedValue);
     }
     
 
 } else if (jTabbedPane2.getSelectedIndex() == 3) {
 Next.setText("Save");
- try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "VG8tKJpMhJm336_");
-        //Check connection 
-        if (con != null) {
-    	  System.out.println("Success");
-      }
-     
-    //Get number of rows from risk_score database
+try {
+    // Load the MySQL JDBC driver class
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    
+    // Create a connection to the MySQL database
+    Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "VG8tKJpMhJm336_");
+    
+    // Check if the connection is successful
+    if (con != null) {
+        System.out.println("Success");
+    }
+    
+    // Get the number of rows in the risk_score table
     int rowCount = 0;
     String sqlNumofRows = "SELECT COUNT(*) FROM risk_score ";
     Statement rows = con.createStatement();
@@ -2331,52 +2390,46 @@ Next.setText("Save");
         rowCount = setRow.getInt(1);
         System.out.println("Number of rows:" + rowCount);
     }
-   
-      String sql = "INSERT INTO risk_score (idrisk_Score, Asset_Names, risk_vuln, risk_likelihood, risk_Impact, risk_Score) VALUES ('"+(rowCount+1)+"', '"+assetsSelected+"', '"+vuln+"', '"+likelihoodCalcuation+"','"+impactCalcuation+"','"+impactCalcuation+"')";
-      Statement stmt=con.createStatement();
-      int rowsInserted = stmt.executeUpdate(sql);
-      
-      //Determine time if successful or not
-      DefaultTableModel model = (DefaultTableModel)homePageTable.getModel();
-      LocalDateTime now = LocalDateTime.now();
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-      String formattedDateTime = now.format(formatter);
-      
-    //Get number of rows from risk_change  database
-        int rowCountChange = 0;
-        String NumofRows = "SELECT COUNT(*) FROM risk_change ";
-        Statement Numrows = con.createStatement();
-        ResultSet setRows = Numrows.executeQuery(NumofRows);
-        if (setRows.next()){
-            rowCountChange = setRows.getInt(1);
-            System.out.println("Number of rows:" + rowCountChange);
-        } 
-        
-
-  //    String riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('"+(rowCountChange+1)+"', "+formattedDateTime+"', 'Success');";
-    //  Statement stmts=con.createStatement();
-    //  int rowsInserteds = stmts.executeUpdate(sql);
-      String riskComputedSQL;
-      if (rowsInserted > 0){
-          System.out.println(rowsInserted + " Rows inserted.");
-          jTabbedPane1.setSelectedIndex(3);
-          riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('" + (rowCountChange + 1) + "', '" + formattedDateTime + "', 'Success');";
-//          model.addRow(new Object[] {formattedDateTime, "Success"});
-          
-      } else {
-       System.out.println("No rows Inserted");
-       jTabbedPane1.setSelectedIndex(3);
-         riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('" + (rowCountChange + 1) + "', '" + formattedDateTime + "', 'Failure');";
-//       model.addRow(new Object[] {formattedDateTime, "Failure"});
-      }
+    
+    // Insert a new row into the risk_score table with the user's selections
+    String sql = "INSERT INTO risk_score (idrisk_Score, Asset_Names, risk_vuln, risk_likelihood, risk_Impact, risk_Score) VALUES ('"+(rowCount+1)+"', '"+assetsSelected+"', '"+vuln+"', '"+likelihoodCalcuation+"','"+impactCalcuation+"','"+impactCalcuation+"')";
+    Statement stmt=con.createStatement();
+    int rowsInserted = stmt.executeUpdate(sql);
+    
+    // Get the current date and time in the specified format
+    DefaultTableModel model = (DefaultTableModel)homePageTable.getModel();
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String formattedDateTime = now.format(formatter);
+    
+    // Get the number of rows in the risk_change table
+    int rowCountChange = 0;
+    String NumofRows = "SELECT COUNT(*) FROM risk_change ";
+    Statement Numrows = con.createStatement();
+    ResultSet setRows = Numrows.executeQuery(NumofRows);
+    if (setRows.next()){
+        rowCountChange = setRows.getInt(1);
+        System.out.println("Number of rows:" + rowCountChange);
+    } 
+    
+    // Insert a new row into the risk_change table with the current date and time and the result of the operation
+    String riskComputedSQL;
+    if (rowsInserted > 0){
+        System.out.println(rowsInserted + " Rows inserted.");
+        Tab_tabbedPane.setSelectedIndex(3);
+        riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('" + (rowCountChange + 1) + "', '" + formattedDateTime + "', 'Success');";
+        model.addRow(new Object[] {formattedDateTime, "Success"});
+    } else {
+        System.out.println("No rows Inserted");
+        Tab_tabbedPane.setSelectedIndex(3);
+        riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('" + (rowCountChange + 1) + "', '" + formattedDateTime + "', 'Failure');";
+        model.addRow(new Object[] {formattedDateTime, "Failure"});
+    }
     Statement riskComputedStmt = con.createStatement();
     int riskComputedRowsInserted = riskComputedStmt.executeUpdate(riskComputedSQL);
     
-    //riskMain5.sqlQuerys(); 
-      //Finish Connection
-      con.close();
-      
-      
+    // Close the connection to the MySQL database
+    con.close();
   } catch (Exception e) {
      System.out.println(e);
   }
@@ -2391,32 +2444,22 @@ Next.setText("Save");
     }
     
     
-    private void list1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list1ActionPerformed
+    private void AssetListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssetListActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_list1ActionPerformed
+    }//GEN-LAST:event_AssetListActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void BackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_BackBtnActionPerformed
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void BackBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BackBtnMouseClicked
      if (jTabbedPane2.getModel().getSelectedIndex() == 0){
        System.out.println("Out Of Bounds");
      } else {
      jTabbedPane2.setSelectedIndex(jTabbedPane2.getSelectedIndex()-1);
     
-    }//GEN-LAST:event_jButton2MouseClicked
+    }//GEN-LAST:event_BackBtnMouseClicked
     }
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
-        assetReg s = new assetReg();
-        s.setLocationRelativeTo(null);
-        s.setVisible(true);  
-    }//GEN-LAST:event_jButton5MouseClicked
 
     private void jFrame1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jFrame1PropertyChange
         
@@ -2430,38 +2473,67 @@ Next.setText("Save");
    
     }//GEN-LAST:event_jFrame1KeyPressed
 
-    private void Four1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Four1MouseClicked
-        jTabbedPane1.setSelectedIndex(1);
-    }//GEN-LAST:event_Four1MouseClicked
+    private void RiskScorePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RiskScorePanelMouseClicked
+        Tab_tabbedPane.setSelectedIndex(1);
+    }//GEN-LAST:event_RiskScorePanelMouseClicked
 
     private void Filter_SeverityMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Filter_SeverityMouseClicked
-        
-        
-        if (Filter_Severity.getText() == "Filter Severity"){
-           // RiskScoreTable.getColumn(riskScore);
+  JTable table = RiskScoreTable;
+  DefaultTableModel model = (DefaultTableModel) table.getModel();
+  int rowCount = model.getRowCount();
+  int column = 4;
 
-        //   model.setRowCount(0);
-           
-           for (int i=0; i < riskScore.size(); i++){
-               if (riskScore.get(i) == "Low"){
-                 
-             } else if (riskScore.get(i) == "Medium"){
-                 
-                 
-             }else if (riskScore.get(i) == "High"){
-                 
-           } else {
-                 break;
-             }
-           }
-            
-            
-            Filter_Severity.setText("Filter Normal");
-        } else if (Filter_Severity.getText() == "Filter Normal"){
-            
-            
-            Filter_Severity.setText("Filter Severity");
+  if (Filter_Severity.getText().equals("Filter Severity")) {
+    if (rowCount > 0) {
+      for (int i = 0; i < rowCount; i++) {
+        for (int j = i + 1; j < rowCount; j++) {
+          int score1 = getScore((String) model.getValueAt(i, column));
+          int score2 = getScore((String) model.getValueAt(j, column));
+          if (score2 > score1) {
+            model.moveRow(j, j, i);
+          }
         }
+      }
+    }
+    Filter_Severity.setText("Filter Normal");
+  } else if (Filter_Severity.getText().equals("Filter Normal")) {
+    if (rowCount > 0) {
+      for (int i = 0; i < rowCount; i++) {
+        for (int j = i + 1; j < rowCount; j++) {
+          int score1 = getScore((String) model.getValueAt(i, column));
+          int score2 = getScore((String) model.getValueAt(j, column));
+          if (score1 > score2) {
+            model.moveRow(j, j, i);
+          }
+        }
+      }
+    }
+    Filter_Severity.setText("Filter Severity");
+  }
+}
+
+private int getScore(String riskScore) {
+  switch (riskScore) {
+    case "High":
+      return 3;
+    case "Medium":
+      return 2;
+    case "Low":
+      return 1;
+    default:
+      return 0;
+  }
+        
+        
+//        if (Filter_Severity.getText() == "Filter Severity"){
+//          
+//            
+//            Filter_Severity.setText("Filter Normal");
+//        } else if (Filter_Severity.getText() == "Filter Normal"){
+//            
+//            
+//            Filter_Severity.setText("Filter Severity");
+//        }
     }//GEN-LAST:event_Filter_SeverityMouseClicked
 
     private void Filter_SeverityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Filter_SeverityActionPerformed
@@ -2473,33 +2545,205 @@ Next.setText("Save");
     }//GEN-LAST:event_AssetPanelKeyPressed
 
     private void AssetPanelTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AssetPanelTextMouseClicked
-          jTabbedPane1.setSelectedIndex(0);
+          Tab_tabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_AssetPanelTextMouseClicked
 
     private void AssetPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AssetPanelMouseClicked
-           jTabbedPane1.setSelectedIndex(0);
+           Tab_tabbedPane.setSelectedIndex(0);
+           //initTables();
     }//GEN-LAST:event_AssetPanelMouseClicked
 
-    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
-           jTabbedPane1.setSelectedIndex(3);
-    }//GEN-LAST:event_jLabel6MouseClicked
+    private void ThreatLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ThreatLabelMouseClicked
+           Tab_tabbedPane.setSelectedIndex(4);
+    }//GEN-LAST:event_ThreatLabelMouseClicked
 
-    private void jLabel31MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel31MouseClicked
-        jTabbedPane1.setSelectedIndex(1);
-    }//GEN-LAST:event_jLabel31MouseClicked
+    private void RiskScoreTextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RiskScoreTextMouseClicked
+        Tab_tabbedPane.setSelectedIndex(1);
+    }//GEN-LAST:event_RiskScoreTextMouseClicked
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void CreateNewThreatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateNewThreatActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_CreateNewThreatActionPerformed
 
-    private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
+    private void CreateNewThreatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateNewThreatMouseClicked
+        threatReg s = new threatReg();
+        s.setLocationRelativeTo(null);
+       s.setVisible(true);
+    }//GEN-LAST:event_CreateNewThreatMouseClicked
+
+    private void createNewAssetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createNewAssetMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton10MouseClicked
-    
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt){ 
-        System.out.println("Clicked");
+       assetReg s = new assetReg();
+       s.setLocationRelativeTo(null);
+       s.setVisible(true);
+    }//GEN-LAST:event_createNewAssetMouseClicked
+
+    private void createNewAssetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewAssetActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_createNewAssetActionPerformed
+
+    private void AssetUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssetUpdateBtnActionPerformed
+//           assetNames.clear();
+//           assetDes.clear();
+            InitsqlQuerys();
+            initTables();
+
+
         
+
+    }//GEN-LAST:event_AssetUpdateBtnActionPerformed
+
+    private void update_ThreatsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_update_ThreatsMouseClicked
+         InitsqlQuerys();
+            initTables();
+    }//GEN-LAST:event_update_ThreatsMouseClicked
+
+    private void update_ThreatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_ThreatsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_update_ThreatsActionPerformed
+
+    private void AssetDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssetDeleteBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AssetDeleteBtnActionPerformed
+
+    private void AssetDeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AssetDeleteBtnMouseClicked
+        System.out.println(assetTable.getSelectedRow());
+int selectedRow = assetTable.getSelectedRow();
+if (selectedRow != -1) {
+  DefaultTableModel model = (DefaultTableModel) assetTable.getModel();
+  String column2Value = (String) model.getValueAt(selectedRow, 1);
+  String column3Value = (String) model.getValueAt(selectedRow, 2);
+  
+
+  try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "VG8tKJpMhJm336_");
+
+      //Check connection
+      if (con != null) {
+        System.out.println("Success");
+      }
+
+      String sql = "DELETE FROM assets WHERE AssetName = ? AND Description = ?";
+      PreparedStatement stmt = con.prepareStatement(sql);
+      stmt.setString(1, column2Value);
+      stmt.setString(2, column3Value);
+      stmt.executeUpdate();
+      model.removeRow(selectedRow);
+      Tab_tabbedPane.setSelectedIndex(3);
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
     }
+  
+  
+  
+}    
+    }//GEN-LAST:event_AssetDeleteBtnMouseClicked
+
+    private void AssetUpdateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AssetUpdateBtnMouseClicked
+           InitsqlQuerys();
+            initTables();
+    }//GEN-LAST:event_AssetUpdateBtnMouseClicked
+
+    private void Threat_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Threat_DeleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Threat_DeleteActionPerformed
+
+    private void DashboardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DashboardPanelMouseClicked
+       Tab_tabbedPane.setSelectedIndex(3);
+    }//GEN-LAST:event_DashboardPanelMouseClicked
+
+    private void Threat_DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Threat_DeleteMouseClicked
+        System.out.println(threat_table.getSelectedRow());
+int selectedRow = threat_table.getSelectedRow();
+if (selectedRow != -1) {
+  DefaultTableModel model = (DefaultTableModel) threat_table.getModel();
+  String column2Value = (String) model.getValueAt(selectedRow, 1);
+  String column3Value = (String) model.getValueAt(selectedRow, 2);
+
+  try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "VG8tKJpMhJm336_");
+
+      //Check connection
+      if (con != null) {
+        System.out.println("Success");
+      }
+
+      String sql = "DELETE FROM threats WHERE Threat = ? AND Threat_Description = ?";
+      PreparedStatement stmt = con.prepareStatement(sql);
+      stmt.setString(1, column2Value);
+      stmt.setString(2, column3Value);
+      stmt.executeUpdate();
+      model.removeRow(selectedRow);
+      Tab_tabbedPane.setSelectedIndex(3);
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+}
+    }//GEN-LAST:event_Threat_DeleteMouseClicked
+
+    private void RiskScoreDeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RiskScoreDeleteBtnMouseClicked
+    int selectedRow = RiskScoreTable.getSelectedRow();
+    if (selectedRow != -1) {
+        DefaultTableModel model = (DefaultTableModel) RiskScoreTable.getModel();
+        String column2Value = (String) model.getValueAt(selectedRow, 1);
+        String column3Value = (String) model.getValueAt(selectedRow, 2);
+        String column4Value = (String) model.getValueAt(selectedRow, 3);
+        String column5Value = (String) model.getValueAt(selectedRow, 4);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "VG8tKJpMhJm336_");
+
+            // Check connection
+            if (con != null) {
+                System.out.println("Success");
+            }
+
+            String sql = "DELETE FROM risk_score WHERE Asset_Names = ? AND risk_vuln= ? AND risk_likelihood = ? AND risk_Impact = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, column2Value);
+            stmt.setString(2, column3Value);
+            stmt.setString(3, column4Value);
+            stmt.setString(4, column5Value);
+           // stmt.setString(5, column6Value);
+            stmt.executeUpdate();
+            model.removeRow(selectedRow);
+            Tab_tabbedPane.setSelectedIndex(3);
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+
+
+
+
+
+
+    }//GEN-LAST:event_RiskScoreDeleteBtnMouseClicked
+
+    private void AuditPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AuditPanelMouseClicked
+        try {
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintable(RiskScoreTable.getPrintable(JTable.PrintMode.FIT_WIDTH, null, null));
+            if (job.printDialog()) {
+                job.print();
+            }
+        } catch (PrinterException ex) {
+            ex.printStackTrace();
+        }        
+//Tab_tabbedPane.setSelectedIndex(5);
+    }//GEN-LAST:event_AuditPanelMouseClicked
+
+    private void HelpPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_HelpPanelMouseClicked
+        Tab_tabbedPane.setSelectedIndex(5);
+    }//GEN-LAST:event_HelpPanelMouseClicked
+   
     
     public static void InitsqlQuerys(){
     try {
@@ -2511,42 +2755,72 @@ Next.setText("Save");
     	  System.out.println("Success");
       }
    
-      //Asset Table Input
-      Statement stmt=con.createStatement();
-     ResultSet assetNamez=stmt.executeQuery("SELECT * FROM assets");
-     while (assetNamez.next()) {      
-    	 assetNames.add(assetNamez.getString("AssetName"));
-         assetDes.add(assetNamez.getString("Description"));
-     }
+        Statement stmt = con.createStatement();
+        ResultSet assetNamez = stmt.executeQuery("SELECT * FROM assets");
+      while (assetNamez.next()) {
+     String name = assetNamez.getString("AssetName");
+     if (!assetNames.contains(name)) {
+      assetNames.add(name);
+      assetDes.add(assetNamez.getString("Description"));
+    }
+  }
+
      
      //Threat Table Input
      Statement threatState=con.createStatement();
      ResultSet threatResultSet=threatState.executeQuery("SELECT * FROM threats");
-     while (threatResultSet.next()) {      
-    	 Threat.add(threatResultSet.getString("Threat"));
-         Threat_Des.add(threatResultSet.getString("Threat_Description"));
-         //System.out.println(Threat.size());
-     }
-      
-     //RiskScoreTable Input
-     Statement risk=con.createStatement();
-     ResultSet riskResults=risk.executeQuery("SELECT * FROM risk_Score");
-     while (riskResults.next()){
-         assetNamesRisk.add(riskResults.getString("Asset_Names"));
-         risk_vuln.add(riskResults.getString("risk_vuln"));
-         likelihood.add(riskResults.getString("risk_likelihood"));
-         Impact.add(riskResults.getString("risk_Impact"));
-         riskScore.add(riskResults.getString("risk_Score"));
-     }
+  while (threatResultSet.next()) {
+    String threat = threatResultSet.getString("Threat");
+    if (!Threat.contains(threat)) {
+      Threat.add(threat);
+      Threat_Des.add(threatResultSet.getString("Threat_Description"));
+    }
+  }
+ //RiskScoreTable Input
+Statement riskScoreState = con.createStatement();
+ResultSet riskScoreResultSet = riskScoreState.executeQuery("SELECT * FROM risk_Score");
+while (riskScoreResultSet.next()) {
+String assetName = riskScoreResultSet.getString("Asset_Names");
+if (!assetNamesRisk.contains(assetName)) {
+assetNamesRisk.add(assetName);
+risk_vuln.add(riskScoreResultSet.getString("risk_vuln"));
+likelihood.add(riskScoreResultSet.getString("risk_likelihood"));
+Impact.add(riskScoreResultSet.getString("risk_Impact"));
+riskScore.add(riskScoreResultSet.getString("risk_Score"));
+}
+}     
+  
+  
+//RiskScoreTable Input
+//     Statement risk=con.createStatement();
+//     ResultSet riskResults=risk.executeQuery("SELECT * FROM risk_Score");
+//     while (riskResults.next()){
+//         assetNamesRisk.add(riskResults.getString("Asset_Names"));
+//         risk_vuln.add(riskResults.getString("risk_vuln"));
+//         likelihood.add(riskResults.getString("risk_likelihood"));
+//         Impact.add(riskResults.getString("risk_Impact"));
+//         riskScore.add(riskResults.getString("risk_Score"));
+//     }
      
-     //homePageTable Input
-     Statement homePage=con.createStatement();
-     ResultSet homePageResults=risk.executeQuery("SELECT * FROM risk_change");
-     while (homePageResults.next()){
-         date_time.add(homePageResults.getString("Time"));
-         status.add(homePageResults.getString("risk_status"));
-     }
-
+     date_time.clear();
+status.clear();
+Statement homePage = con.createStatement();
+ResultSet homePageResults = homePage.executeQuery("SELECT * FROM risk_change");
+while (homePageResults.next()) {
+    date_time.add(homePageResults.getString("Time"));
+    status.add(homePageResults.getString("risk_status"));
+}
+     
+//     Statement homePage = con.createStatement();
+//ResultSet homePageResults = homePage.executeQuery("SELECT * FROM risk_change");
+//while (homePageResults.next()) {
+//    String date = homePageResults.getString("Time");
+//    if (!date_time.contains(date)) {
+//        date_time.add(date);
+//        status.add(homePageResults.getString("risk_status"));
+//    }
+//}
+     
      
      
       //Finish Connection
@@ -2634,163 +2908,165 @@ Next.setText("Save");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AssetDeleteBtn;
+    private javax.swing.JLabel AssetHomepage_Text;
+    private java.awt.List AssetList;
+    private javax.swing.JLabel AssetManagementHelpText;
+    private javax.swing.JLabel AssetManagmentText;
     private javax.swing.JPanel AssetPanel;
     private javax.swing.JLabel AssetPanelText;
-    private javax.swing.JLabel AssetTextOut;
+    private javax.swing.JPanel AssetSelectionPanel;
+    private javax.swing.JPanel AssetTableBackgroundPanel;
+    private javax.swing.JButton AssetUpdateBtn;
+    private javax.swing.JLabel Asset_HomepageLable;
+    private javax.swing.JLabel Asset_Showing;
+    private javax.swing.JLabel AttackComplexityText;
+    private javax.swing.JLabel AttackVectorText;
+    private javax.swing.JLabel AuditHelpText;
+    private javax.swing.JPanel AuditPanel;
+    private javax.swing.JLabel AuditText;
+    private javax.swing.JLabel AvailabilityText;
+    private javax.swing.JButton BackBtn;
+    private javax.swing.JScrollPane BackgroundMain;
+    private javax.swing.JLabel CIAText;
+    private javax.swing.JLabel ConfidentialityText;
+    private javax.swing.JLabel ConsequencesText;
+    private javax.swing.JButton CreateNewThreat;
+    private javax.swing.JPanel CriticalPanel;
+    private javax.swing.JLabel CriticalText;
+    private javax.swing.JLabel DashboardJLabel;
+    private javax.swing.JPanel DashboardPanel;
+    private javax.swing.JLabel DisruptionOfServiceText;
+    private javax.swing.JLabel FeaturesLabel;
+    private javax.swing.JPanel FeaturesPanel;
     private javax.swing.JButton Filter_Severity;
-    private javax.swing.JPanel Four;
-    private javax.swing.JPanel Four1;
-    private javax.swing.JLabel ImpactTextOut;
-    private javax.swing.JLabel LikelihoodTextOut;
+    private javax.swing.JLabel FinancialDamageText;
+    private javax.swing.JPanel Help;
+    private javax.swing.JPanel HelpBackground;
+    private javax.swing.JPanel HelpPanel;
+    private javax.swing.JLabel HelpText;
+    private javax.swing.JLabel High7Text;
+    private javax.swing.JLabel High8Text;
+    private javax.swing.JPanel HomePageAssetPanel;
+    private javax.swing.JPanel HomePageRiskPanel;
+    private javax.swing.JPanel HomePageThreatPanel;
+    private javax.swing.JLabel Home_Icon;
+    private javax.swing.JPanel Homepage;
+    private javax.swing.JPanel HomepageTable;
+    private javax.swing.JLabel ImpactHighText;
+    private javax.swing.JLabel ImpactLowText;
+    private javax.swing.JLabel ImpactMediumText;
+    private javax.swing.JLabel IntegrityText;
+    private javax.swing.JLabel IntroductionHelpText;
+    private javax.swing.JLabel LikelihoodHighText;
+    private javax.swing.JLabel LikelihoodLowText;
+    private javax.swing.JLabel LikelihoodMediumText;
+    private javax.swing.JLabel LogoLabel;
+    private javax.swing.JLabel Low2Text;
+    private javax.swing.JPanel LowPanel;
+    private javax.swing.JLabel MainImpactText;
+    private javax.swing.JLabel MainLikelihoodText;
+    private javax.swing.JLabel ManagementJLabel;
+    private javax.swing.JPanel ManagementPanel;
+    private javax.swing.JLabel Medium4;
+    private javax.swing.JLabel Medium5Text;
+    private javax.swing.JPanel MiddleMediumpanel;
+    private javax.swing.JPanel NavigationBarPanel;
     private javax.swing.JButton Next;
-    private javax.swing.JPanel One;
+    private javax.swing.JLabel NonComplianceRiskText;
+    private javax.swing.JLabel PrivilegesText;
+    private javax.swing.JLabel ReputationText;
+    private javax.swing.JPanel RightHighPanel;
+    private javax.swing.JPanel RightMediumPanel;
+    private javax.swing.JLabel RiskAssessmentPanel;
+    private javax.swing.JPanel RiskCalcPanel;
+    private javax.swing.JLabel RiskCalcText;
+    private javax.swing.JLabel RiskCalc_Homepage;
+    private javax.swing.JLabel RiskRatingText;
+    private javax.swing.JButton RiskScoreDeleteBtn;
+    private javax.swing.JLabel RiskScoreHelpText;
+    private javax.swing.JLabel RiskScoreManagementText;
+    private javax.swing.JLabel RiskScoreManagmentHelpText;
+    private javax.swing.JPanel RiskScorePanel;
     private javax.swing.JTable RiskScoreTable;
+    private javax.swing.JPanel RiskScoreTableBackgroundPanel;
+    private javax.swing.JLabel RiskScoreText;
+    private javax.swing.JPanel SavePanel;
+    private javax.swing.JLabel SaveTextLabel;
+    private javax.swing.JPanel SaveTextPanel;
+    private javax.swing.JLabel ScopeText;
+    private javax.swing.JPanel SelectAssetPanel;
+    private javax.swing.JLabel SelectAssetText;
+    private javax.swing.JLabel SelectAssetsLabel;
+    private javax.swing.JLabel SelectThreatLabel;
+    private javax.swing.JPanel SelectThreatPanel;
+    private javax.swing.JLabel SelectThreatText;
+    private javax.swing.JLabel Showing_RiskScore;
+    private javax.swing.JLabel Showing_threats;
+    private javax.swing.JLabel SummaryAssetText;
+    private javax.swing.JLabel SummaryImpactTextOut;
+    private javax.swing.JLabel SummaryLikelihoodText;
+    private javax.swing.JPanel SummaryPanel;
+    private javax.swing.JLabel SummaryRiskScoreText;
+    private javax.swing.JLabel SummarySelectedAssetText;
+    private javax.swing.JLabel SummaryText;
+    private javax.swing.JLabel SummaryThreatSelectionText;
+    private javax.swing.JLabel SummaryThreatText;
+    public javax.swing.JTabbedPane Tab_tabbedPane;
     private javax.swing.JPanel ThreatJPanel;
-    private javax.swing.JPanel Three3;
-    private javax.swing.JPanel Three5;
-    private javax.swing.JPanel Three6;
-    private javax.swing.JPanel Two;
-    private javax.swing.JPanel Two1;
+    private javax.swing.JLabel ThreatLabel;
+    private java.awt.List ThreatList;
+    private javax.swing.JLabel ThreatManagementText;
+    private javax.swing.JLabel ThreatManagmentHelpText;
+    private javax.swing.JPanel ThreatPanel;
+    private javax.swing.JPanel ThreatSelecitonPanel;
+    private javax.swing.JPanel ThreatTableBackground;
+    private javax.swing.JButton Threat_Delete;
+    private javax.swing.JPanel TopHighPanel;
+    private javax.swing.JPanel TopRiskAssessmentPanel;
+    private javax.swing.JPanel TopSummaryPanel;
+    private javax.swing.JLabel TraceabilityText;
+    private javax.swing.JLabel Vuln_homepageLabel;
+    private javax.swing.JLabel VulnerabilityText;
+    private javax.swing.JLabel Vulnerabilitys_HomepageLabel;
     private javax.swing.JPanel assetJpanel;
+    private javax.swing.JTable assetTable;
     private javax.swing.JComboBox<String> attackComplexityBox;
     private javax.swing.JComboBox<String> attackVectorBox;
     private javax.swing.JComboBox<String> availabilityBox;
     private javax.swing.JPanel calcRiskPanel;
     private javax.swing.JComboBox<String> confidentialityBox;
+    private javax.swing.JButton createNewAsset;
     private javax.swing.JComboBox<String> disruptionBox;
     private javax.swing.JComboBox<String> financialBox;
     private javax.swing.JTable homePageTable;
     private javax.swing.JComboBox<String> integrityBox;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton9;
     private javax.swing.JFrame jFrame1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel100;
     private javax.swing.JLabel jLabel101;
-    private javax.swing.JLabel jLabel102;
-    private javax.swing.JLabel jLabel103;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
-    private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
-    private javax.swing.JLabel jLabel39;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel40;
-    private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
-    private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
-    private javax.swing.JLabel jLabel45;
-    private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
-    private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel52;
-    private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel56;
-    private javax.swing.JLabel jLabel57;
-    private javax.swing.JLabel jLabel58;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel60;
-    private javax.swing.JLabel jLabel61;
-    private javax.swing.JLabel jLabel62;
-    private javax.swing.JLabel jLabel63;
-    private javax.swing.JLabel jLabel64;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel75;
-    private javax.swing.JLabel jLabel76;
-    private javax.swing.JLabel jLabel77;
-    private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel79;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel80;
-    private javax.swing.JLabel jLabel81;
-    private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel83;
-    private javax.swing.JLabel jLabel84;
-    private javax.swing.JLabel jLabel85;
     private javax.swing.JLabel jLabel86;
-    private javax.swing.JLabel jLabel87;
     private javax.swing.JLabel jLabel88;
-    private javax.swing.JLabel jLabel89;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabel90;
-    private javax.swing.JLabel jLabel91;
     private javax.swing.JLabel jLabel92;
     private javax.swing.JLabel jLabel93;
     private javax.swing.JLabel jLabel94;
-    private javax.swing.JLabel jLabel96;
-    private javax.swing.JLabel jLabel97;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel17;
-    private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel21;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel39;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel40;
     private javax.swing.JPanel jPanel41;
-    private javax.swing.JPanel jPanel42;
-    private javax.swing.JPanel jPanel43;
-    private javax.swing.JPanel jPanel44;
-    private javax.swing.JPanel jPanel45;
-    private javax.swing.JPanel jPanel46;
-    private javax.swing.JPanel jPanel47;
     private javax.swing.JPanel jPanel48;
     private javax.swing.JPanel jPanel49;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel50;
-    private javax.swing.JPanel jPanel51;
-    private javax.swing.JPanel jPanel52;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTextPane jTextPane3;
-    private javax.swing.JTextPane jTextPane5;
-    private java.awt.List list1;
-    private java.awt.List list2;
+    private javax.swing.JPanel leftMediumPanel;
     private javax.swing.JComboBox<String> nonComplianceBox;
     private javax.swing.JComboBox<String> privilegesRequiredBox;
     private javax.swing.JComboBox<String> reputationBox;
@@ -2801,5 +3077,6 @@ Next.setText("Save");
     private javax.swing.JTable threat_table;
     private javax.swing.JPanel topBar;
     private javax.swing.JComboBox<String> tracabilityBox;
+    private javax.swing.JButton update_Threats;
     // End of variables declaration//GEN-END:variables
 }

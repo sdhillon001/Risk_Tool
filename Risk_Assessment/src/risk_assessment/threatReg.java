@@ -14,12 +14,12 @@ import java.sql.*;
  *
  * @author sdhil
  */
-public class assetReg extends javax.swing.JFrame {
+public class threatReg extends javax.swing.JFrame {
 
     /**
      * Creates new form assetReg
      */
-    public assetReg() {
+    public threatReg() {
         initComponents();
     }
     
@@ -54,7 +54,7 @@ public void setHome(){
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel1.setText("Asset Registry:");
+        jLabel1.setText("Threat Registry:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -156,7 +156,7 @@ public void setHome(){
      
 //Get number of rows
     int rowCount = 0;
-    String sqlNumofRows = "SELECT COUNT(*) FROM assets ";
+    String sqlNumofRows = "SELECT COUNT(*) FROM threats ";
     Statement rows = con.createStatement();
     ResultSet setRow = rows.executeQuery(sqlNumofRows);
     if (setRow.next()){
@@ -166,7 +166,7 @@ public void setHome(){
     
     
 //check if asset is already in table 
-    String sqlCheck = "SELECT AssetName FROM assets WHERE AssetName = '"+nameInput+"'";
+    String sqlCheck = "SELECT Threat FROM threats WHERE Threat= '"+nameInput+"'";
     Statement check = con.createStatement();
     ResultSet checker = check.executeQuery(sqlCheck);
     if (checker.next()){
@@ -174,7 +174,7 @@ public void setHome(){
     } else {
         System.out.println("Row Created");
       //Inserting the Assets
-      String sql = "INSERT INTO assets (idAssets, AssetName, Description) VALUES ('"+(rowCount+1)+"', '"+nameInput+"', '"+descriptionInput+"')";
+      String sql = "INSERT INTO threats (idThreats, Threat, Threat_Description) VALUES ('"+(rowCount+1)+"', '"+nameInput+"', '"+descriptionInput+"')";
       Statement stmt=con.createStatement();
       int rowsInserted = stmt.executeUpdate(sql);
       if (rowsInserted > 0){
@@ -221,20 +221,21 @@ public void setHome(){
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(assetReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(threatReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(assetReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(threatReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(assetReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(threatReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(assetReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(threatReg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new assetReg().setVisible(true);
+                new threatReg().setVisible(true);
             }
         });
     }
