@@ -104,23 +104,23 @@ private String impactCalcuation;
         assetTable.getColumnModel().getColumn(0).setPreferredWidth(10);
         DefaultTableModel model = (DefaultTableModel)assetTable.getModel();
         model.setRowCount(0);
+        AssetList.clear();
         Object rowData[] = new Object[3];
         for (int i =0; i < assetNames.size(); i++){
             rowData[1] = assetNames.get(i);
             rowData[2] = assetDes.get(i);
-            model.addRow(rowData);
+            model.addRow(rowData);   
             AssetList.add(assetNames.get(i));
-        } 
+        }
+ 
          Asset_Showing.setText("Showing:" + assetNames.size()+ " Assets");
         AssetHomepage_Text.setText(String.valueOf(assetNames.size()));
 
-
-
-        
         //threat Management Table
         threat_table.getColumnModel().getColumn(0).setPreferredWidth(10);
         DefaultTableModel threat_tableModel = (DefaultTableModel)threat_table.getModel();
         threat_tableModel.setRowCount(0);
+        ThreatList.clear();
         Object ThreatRowData[] = new Object[3];
         System.out.println(Threat.size());
         for (int i =0; i < Threat.size(); i++){
@@ -135,6 +135,7 @@ private String impactCalcuation;
         //Risk score table
         DefaultTableModel RiskScoreModel = (DefaultTableModel)RiskScoreTable.getModel();
         Object riskRowData[] = new Object[6];
+         RiskScoreModel.setRowCount(0);
         for (int i = 0; i < assetNamesRisk.size(); i++){
          riskRowData[0] = assetNamesRisk.get(i); 
          riskRowData[1] = risk_vuln.get(i);
@@ -2251,6 +2252,7 @@ private String impactCalcuation;
     private int conseq = 0;
     private int threat = 0;
     private int likely = 0;
+    private String riskScoreOutput;
     
     private void RiskCalcPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RiskCalcPanelMouseClicked
         Tab_tabbedPane.setSelectedIndex(2);
@@ -2316,8 +2318,8 @@ else if (jTabbedPane2.getSelectedIndex() == 2) {
         float Cons = (float) consequences / 4;
         double LikelihoodTotal = (Vuln);
         double FinalImpact = (CIA + Cons) / 2;
-        System.out.println(LikelihoodTotal + "2123");
-        System.out.println(FinalImpact + "434");
+        System.out.println(LikelihoodTotal);
+        System.out.println(FinalImpact);
         
         String likelihoodOutput = "";
         String ImpactOutput = "";
@@ -2332,7 +2334,10 @@ System.out.println(likelihoodOutput);
 } else if (LikelihoodTotal >= 6) {
 likelihoodOutput = "High";
 System.out.println(likelihoodOutput);
-} else {
+} else if (LikelihoodTotal >= 9.0) {
+likelihoodOutput = "Critical";
+System.out.println(likelihoodOutput);
+}else {
 System.out.println("Likelihood checker error");
 }
 
@@ -2352,6 +2357,37 @@ System.out.println(ImpactOutput);
 } else {
 System.out.println("IMPACT checker error");
 }
+
+///
+int riskScoreValue;
+
+if (likelihoodOutput.equals("Minimal") || ImpactOutput.equals("Minimal")) {
+    riskScoreValue = 1;
+    riskScoreOutput = "Minimal";
+} else if (likelihoodOutput.equals("Low") && ImpactOutput.equals("Low")) {
+    riskScoreValue = 2;
+    riskScoreOutput = "Low";
+} else if ((likelihoodOutput.equals("Low") && ImpactOutput.equals("Medium")) ||
+           (likelihoodOutput.equals("Medium") && ImpactOutput.equals("Low")) ||
+           (likelihoodOutput.equals("Medium") && ImpactOutput.equals("Medium")) ||
+           (likelihoodOutput.equals("Low") && ImpactOutput.equals("High")) ||
+           (likelihoodOutput.equals("Medium") && ImpactOutput.equals("High")) ||
+           (likelihoodOutput.equals("High") && ImpactOutput.equals("Low"))) {
+    riskScoreValue = 3;
+    riskScoreOutput = "Medium";
+} else if ((likelihoodOutput.equals("High") && ImpactOutput.equals("Medium")) ||
+           (likelihoodOutput.equals("Medium") && ImpactOutput.equals("Critical")) ||
+           (likelihoodOutput.equals("High") && ImpactOutput.equals("High"))) {
+    riskScoreValue = 4;
+    riskScoreOutput = "High";
+} else if (likelihoodOutput.equals("High") && ImpactOutput.equals("Critical")) {
+    riskScoreValue = 5;
+    riskScoreOutput = "Critical";
+} else {
+    System.out.println("Risk score calculator error");
+    return;
+}
+///
     
     SummaryRiskScoreText.setText("Risk Score");
     likelihoodCalcuation = likelihoodOutput;
@@ -2391,11 +2427,16 @@ try {
         System.out.println("Number of rows:" + rowCount);
     }
     
+    //get the current model of risk Score
+    DefaultTableModel risk = (DefaultTableModel)RiskScoreTable.getModel();
+    
+    
     // Insert a new row into the risk_score table with the user's selections
-    String sql = "INSERT INTO risk_score (idrisk_Score, Asset_Names, risk_vuln, risk_likelihood, risk_Impact, risk_Score) VALUES ('"+(rowCount+1)+"', '"+assetsSelected+"', '"+vuln+"', '"+likelihoodCalcuation+"','"+impactCalcuation+"','"+impactCalcuation+"')";
+    String sql = "INSERT INTO risk_score (idrisk_Score, Asset_Names, risk_vuln, risk_likelihood, risk_Impact, risk_Score) VALUES ('"+(rowCount+1)+"', '"+assetsSelected+"', '"+vuln+"', '"+likelihoodCalcuation+"','"+impactCalcuation+"','"+riskScoreOutput+"')";
     Statement stmt=con.createStatement();
     int rowsInserted = stmt.executeUpdate(sql);
     
+
     // Get the current date and time in the specified format
     DefaultTableModel model = (DefaultTableModel)homePageTable.getModel();
     LocalDateTime now = LocalDateTime.now();
@@ -2417,8 +2458,15 @@ try {
     if (rowsInserted > 0){
         System.out.println(rowsInserted + " Rows inserted.");
         Tab_tabbedPane.setSelectedIndex(3);
+        jTabbedPane2.setSelectedIndex(0);
+        SummarySelectedAssetText.setText("");
+        SummaryThreatSelectionText.setText("");
+        SummaryLikelihoodText.setText("");
+        SummaryImpactTextOut.setText("");
         riskComputedSQL = "INSERT INTO risk_change (`Row`, `Time`, `risk_status`) VALUES ('" + (rowCountChange + 1) + "', '" + formattedDateTime + "', 'Success');";
         model.addRow(new Object[] {formattedDateTime, "Success"});
+        Object[] data = {assetsSelected, vuln, likelihoodCalcuation, likelihoodCalcuation, riskScoreOutput};
+        risk.addRow(data);
     } else {
         System.out.println("No rows Inserted");
         Tab_tabbedPane.setSelectedIndex(3);
@@ -2583,8 +2631,8 @@ private int getScore(String riskScore) {
     }//GEN-LAST:event_createNewAssetActionPerformed
 
     private void AssetUpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssetUpdateBtnActionPerformed
-//           assetNames.clear();
-//           assetDes.clear();
+      //     assetNames.clear();
+      //     assetDes.clear();
             InitsqlQuerys();
             initTables();
 
@@ -2643,7 +2691,7 @@ if (selectedRow != -1) {
 
     private void AssetUpdateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AssetUpdateBtnMouseClicked
            InitsqlQuerys();
-            initTables();
+          initTables();
     }//GEN-LAST:event_AssetUpdateBtnMouseClicked
 
     private void Threat_DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Threat_DeleteActionPerformed
